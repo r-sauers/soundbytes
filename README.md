@@ -4,13 +4,13 @@ CSCI 5117, Fall 2024, [assignment description](https://canvas.umn.edu/courses/46
 
 ## App Info:
 
-* Team Name: TODO
-* App Name: TODO
+* Team Name: 404 Not Found
+* App Name: SoundBites
 * App Link: <https://TODO.com/>
 
 ### Students
 
-* First Last, x500@umn.edu
+* Ryan Sauers, sauer319@umn.edu
 * ...
 
 
@@ -33,9 +33,9 @@ Which (if any) progressive web app feature(s) does your app support?
 
 ## Mockup images
 
-**[Add images/photos that show your mockup](https://stackoverflow.com/questions/10189356/how-to-add-screenshot-to-readmes-in-github-repository) along with a very brief caption:**
-
-![](https://media.giphy.com/media/26ufnwz3wDUli7GU0/giphy.gif)
+![]([https://media.giphy.com/media/26ufnwz3wDUli7GU0/giphy.gif](https://github.com/csci5117f24/project-2-404-not-found/blob/main/mockups/Soundbites_1.png))
+![]([https://media.giphy.com/media/26ufnwz3wDUli7GU0/giphy.gif](https://github.com/csci5117f24/project-2-404-not-found/blob/main/mockups/Soundbites_2.png))
+![]([https://media.giphy.com/media/26ufnwz3wDUli7GU0/giphy.gif](https://github.com/csci5117f24/project-2-404-not-found/blob/main/mockups/Soundbites_3.png))
 
 
 ## Testing Notes
