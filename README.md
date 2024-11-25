@@ -1,70 +1,56 @@
-# Module 2 Group Assignment
+# ember-quickstart
 
-CSCI 5117, Fall 2024, [assignment description](https://canvas.umn.edu/courses/460699/pages/project-2)
+This README outlines the details of collaborating on this Ember application.
+A short introduction of this app could easily go here.
 
-## App Info:
+## Prerequisites
 
-* Team Name: 404 Not Found
-* App Name: SoundBites
-* App Link: <https://TODO.com/>
+You will need the following things properly installed on your computer.
 
-### Students
+- [Git](https://git-scm.com/)
+- [Node.js](https://nodejs.org/) (with npm)
+- [Ember CLI](https://cli.emberjs.com/release/)
+- [Google Chrome](https://google.com/chrome/)
 
-* Ryan Sauers, sauer319@umn.edu
-* ...
+## Installation
 
+- `git clone <repository-url>` this repository
+- `cd ember-quickstart`
+- `npm install`
 
-## Key Features
+## Running / Development
 
-**Describe the most challenging features you implemented
-(one sentence per bullet, maximum 4 bullets):**
+- `npm run start`
+- Visit your app at [http://localhost:4200](http://localhost:4200).
+- Visit your tests at [http://localhost:4200/tests](http://localhost:4200/tests).
 
-* ...
+### Code Generators
 
-Which (if any) device integration(s) does your app support?
+Make use of the many generators for code, try `ember help generate` for more details
 
-* ...
+### Running Tests
 
-Which (if any) progressive web app feature(s) does your app support?
+- `npm run test`
+- `npm run test:ember -- --server`
 
-* ...
+### Linting
 
+- `npm run lint`
+- `npm run lint:fix`
 
+### Building
 
-## Mockup images
+- `npm exec ember build` (development)
+- `npm run build` (production)
 
-![](https://github.com/csci5117f24/project-2-404-not-found/blob/main/mockups/Soundbites_1.png)
-![](https://github.com/csci5117f24/project-2-404-not-found/blob/main/mockups/Soundbites_2.png)
-![](https://github.com/csci5117f24/project-2-404-not-found/blob/main/mockups/Soundbites_3.png)
+### Deploying
 
+Specify what it takes to deploy your app.
 
-## Testing Notes
+## Further Reading / Useful Links
 
-**Is there anything special we need to know in order to effectively test your app? (optional):**
-
-* ...
-
-
-
-## Screenshots of Site (complete)
-
-**[Add a screenshot of each key page](https://stackoverflow.com/questions/10189356/how-to-add-screenshot-to-readmes-in-github-repository)
-along with a very brief caption:**
-
-![](https://media.giphy.com/media/o0vwzuFwCGAFO/giphy.gif)
-
-
-
-## External Dependencies
-
-**Document integrations with 3rd Party code or services here.
-Please do not document required libraries (e.g., React, Azure serverless functions, Azure nosql).**
-
-* Library or service name: description of use
-* ...
-
-**If there's anything else you would like to disclose about how your project
-relied on external code, expertise, or anything else, please disclose that
-here:**
-
-...
+- [ember.js](https://emberjs.com/)
+- [ember-cli](https://cli.emberjs.com/release/)
+- Development Browser Extensions
+  - [ember inspector for chrome](https://chrome.google.com/webstore/detail/ember-inspector/bmdblncegkenkacieihfhpjfppoconhi)
+  - [ember inspector for firefox](https://addons.mozilla.org/en-US/firefox/addon/ember-inspector/)
