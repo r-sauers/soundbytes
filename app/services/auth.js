@@ -57,4 +57,3 @@ export default class AuthService extends Service {
     signOut(this.auth);
   }
 }
-

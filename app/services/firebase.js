@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
 import { getAnalytics } from 'firebase/analytics';
-import { getStorage } from "firebase/storage";
+import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDYQ5PLZzPeYCsb9CrUpy7aljZzilhG1Jo',
@@ -14,9 +14,8 @@ const firebaseConfig = {
   storageBucket: 'csci-5117-project-2.firebasestorage.app',
 };
 
-
 export default class FirebaseService extends Service {
-    app = initializeApp(firebaseConfig);
-    db = getFirestore(this.app);
-    storage = getStorage(app);
- }
+  app = initializeApp(firebaseConfig);
+  db = getFirestore(this.app);
+  storage = getStorage(app);
+}
