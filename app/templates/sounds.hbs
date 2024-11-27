@@ -7,6 +7,8 @@
       <button type="button" class="btn btn-primary m-3">Record Sound</button>
   </div>
 </div>
-<div class="tall">
-  <p>Hello World</p>
+<div class="container">
+  {{#each this.soundbytes as |soundbyte|}}
+    <Sound::Editable @soundbyte={{soundbyte}} />
+  {{/each}}
 </div>

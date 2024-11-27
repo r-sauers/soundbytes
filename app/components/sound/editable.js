@@ -2,7 +2,8 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
-import {
+import WaveSurfer from 'wavesurfer.js';
+/*import {
   collection,
   addDoc,
   doc,
@@ -14,36 +15,43 @@ import {
   deleteDoc,
   getDoc,
 } from 'firebase/firestore';
-import { deleteObject, ref } from 'firebase/storage';
+import { deleteObject, ref } from 'firebase/storage';*/
 
 export default class ToDoEditable extends Component {
   @service firebase;
   @service auth;
   @service router;
 
-  @tracked archived = this.args.archived;
+  @tracked archived = undefined;
   @tracked volume = 0.5; //I think we could have a service to increase/decrease volume and play/pause, so we could save volume across sounds?
   @tracked paused = true;
   @tracked offset = 0; //this might not be needed, need to look int wave api
+
+  id;
 
   wavesurfer = null;
 
   constructor() {
     super(...arguments);
-    this.initWaveSurfer();
+    const sb = this.args.soundbyte;
+    this.id = sb.id;
+    this.archived = sb.archived;
+    this.audioURL = sb.audioURL;
   }
 
+  @action
   initWaveSurfer() {
     this.wavesurfer = WaveSurfer.create({
-      container: `#waveform-${this.args.id}`,
+      container: `#waveform-${this.id}`,
       waveColor: 'violet',
       progressColor: 'purple',
       height: 100,
       barWidth: 3,
     });
-    this.wavesurfer.load(this.args.audioURL);
+    this.wavesurfer.load(this.audioURL);
   }
 
+  /*
   @action
   async toggleArchived() {
     d = doc(
@@ -91,7 +99,7 @@ export default class ToDoEditable extends Component {
     await deleteObject(audio);
     //reroute to sounds feed
     this.router.transitionTo('sounds');
-  }
+  }*/
 
   @action
   async togglePlayback() {
