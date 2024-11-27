@@ -4,15 +4,22 @@ import { service } from '@ember/service';
 export default class ArchivedRoute extends Route {
   @service router;
 
-  /*async model() {
+  async model() {
     //ensure user is logged in
     try {
-      await this.auth.ensureInitialized();
-      await this.auth.ensureLoggedIn();
+      // await this.auth.ensureInitialized();
+      // await this.auth.ensureLoggedIn();
     } catch (error) {
       console.log(error);
       this.router.transitionTo('index');
     }
-    return;
-  }*/
+
+    const archived_projects = [
+      {
+        name: 'test',
+        date_archived: 'Dec 25, 2023',
+      },
+    ];
+    return archived_projects;
+  }
 }

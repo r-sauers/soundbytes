@@ -1,9 +1,23 @@
 {{page-title "archived"}}
-<Nav/>
+<Nav />
 <div class="header-container header-image">
   <h1 class="header-title display-1">Archived Projects</h1>
   <h2 class="header-subtitle display-6">View and open archived proects here!</h2>
 </div>
-<div class="tall">
-  <p>Hello World</p>
+<div class="container py-5">
+  {{#each @model as |archived|}}
+    <ul>
+      <li class="fs-3">
+        <LinkTo
+          @route="sounds"
+          aria-current="page"
+        >{{archived.name}}</LinkTo>
+        <span class="fs-4 ms-2 text-secondary">(Archived:
+        {{archived.date_archived}})</span>
+      </li>
+    </ul>
+  {{/each}}
+</div>
+<div>
+
 </div>
