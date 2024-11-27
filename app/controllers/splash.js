@@ -4,9 +4,13 @@ import { action } from '@ember/object';
 
 export default class SplashController extends Controller {
   @service router;
+  @service auth;
 
   @action
-  login() {
-    this.router.transitionTo('sounds');
+  async login() {
+    if (this.auth.loggedIn) {
+      await this.auth.sign_out();
+      this.router.transitionTo('index');
+    } else await this.auth.sign_in_with_popup();
   }
 }

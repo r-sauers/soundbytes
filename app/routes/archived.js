@@ -3,12 +3,13 @@ import { service } from '@ember/service';
 
 export default class ArchivedRoute extends Route {
   @service router;
-
+  @service auth;
+  
   async model() {
     //ensure user is logged in
     try {
-      // await this.auth.ensureInitialized();
-      // await this.auth.ensureLoggedIn();
+      await this.auth.ensureInitialized();
+      await this.auth.ensureLoggedIn();
     } catch (error) {
       console.log(error);
       this.router.transitionTo('index');
