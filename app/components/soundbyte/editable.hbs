@@ -4,8 +4,16 @@
     <h5 class="card-title">Special title treatment</h5>
     <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
     <div id="waveform-{{@soundbyte.id}}" {{did-insert this.initWaveSurfer}}></div>
-    <button type="button">&lt;&lt;</button>
-    <button type="button" {{on 'click' this.togglePlayback}}>{{if this.paused 'Play' 'Pause'}}</button>
-    <button type="button">&gt;&gt;</button>
+    <button type="button" {{on 'click' this.skipBackward}}>&lt;&lt;</button>
+    <button type="button" {{on 'click' this.togglePlayback}}>
+      {{#if (eq this.status 'paused')}}
+        Play
+      {{else if (eq this.status 'playing')}}
+        Pause
+      {{else}}
+        Restart
+      {{/if}}
+    </button>
+    <button type="button" {{on 'click' this.skipForward}}>&gt;&gt;</button>
   </div>
 </div>
