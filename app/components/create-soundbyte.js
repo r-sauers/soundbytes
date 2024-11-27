@@ -33,7 +33,7 @@ export default class CreateSoundbyte extends Component {
             //update the storage, which makes our audio accessible by url
             const nextID = await this.getNextSoundbyteID(); //these can probably be implemented by a service since it will be a common function
             await this.updateNextSoundbyteID();
-            const fileRef = ref(this.firebase.storage, `audio/users/${this.auth.user.email}/${nextID.toString()}.mp3`);
+            const fileRef = ref(this.firebase.storage, `audio/users/${this.auth.user.email}/${nextID.toString()}.webm`);
             await uploadBytes(fileRef, audioBlob);
             //update firestore. The soundbyte object will contain the url that has the audio data
             const d = doc(this.firebase.db, 'users', this.auth.user.email, 'soundbytes', nextID.toString());
@@ -43,6 +43,7 @@ export default class CreateSoundbyte extends Component {
                 archived: false,
                 url: url,
             });
+            console.log("sent");
             //reset the recorder
             this.recorder = null;
             await this.createRecorder();
@@ -110,7 +111,6 @@ export default class CreateSoundbyte extends Component {
     //make this a toggle when you get everything else to work
     @action
     async playbackAudio() {
-        
         console.log("playing back audio")
         if (this.recordedChunks.length < 1) {
             console.log("Can't play back, no recording provided");
@@ -120,14 +120,14 @@ export default class CreateSoundbyte extends Component {
         if (!this.audioURL) {
             console.log("Audio URl doesn't exist, creating one");
             //combine chunks into a blob
-            const audioBlob = new Blob(this.recordedChunks, { type: 'audio/mp3' });
+            const audioBlob = new Blob(this.recordedChunks, { type: 'audio/webm' });
             //create a URL from Blob so to stream audio from
             console.log(`created an audio blob of length ${audioBlob.size} from ${this.recordedChunks.length} recordings`);
             this.audioURL = URL.createObjectURL(audioBlob);
             console.log(`Audio URL is now: ${this.audioURL}`);
         }
         const audio = new Audio(this.audioURL);
-        await audio.play();
+        await audio.play(); //this is giving us issues
         console.log("played audio");
     }
   
@@ -141,7 +141,7 @@ export default class CreateSoundbyte extends Component {
         }
         //create recorder
         const stream = await navigator.mediaDevices.getUserMedia({audio: true})
-        this.recorder = new MediaRecorder(stream);
+        this.recorder = new MediaRecorder(stream, {mimeType: 'audio/webm'}); //MediaRecorder only accepts webm types
         //save recording data in our current audio chunk variable
         this.recorder.ondataavailable = (event) => {
             if (event.data.size > 0) {
@@ -189,12 +189,12 @@ export default class CreateSoundbyte extends Component {
 
     //good enough for now
     showTryAgainPopup() {
-        console.alert("Please try again");
+        console.log("Please try again");
     }
 
     //good enough for now
     showBrowserErrorPopup() {
-        console.alert("Incompatible Browser");
+        console.log("Incompatible Browser");
     }
     
 }
