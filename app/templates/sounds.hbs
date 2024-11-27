@@ -7,8 +7,8 @@
       <button type="button" class="btn btn-primary m-3">Record Sound</button>
   </div>
 </div>
-<div class="container">
+<div class="container my-5">
   {{#each this.soundbytes as |soundbyte|}}
-    <Soundbyte::Editable @soundbyte={{soundbyte}} />
+    <Soundbyte::Editable @soundbyte={{soundbyte}} class="my-3"/>
   {{/each}}
 </div>

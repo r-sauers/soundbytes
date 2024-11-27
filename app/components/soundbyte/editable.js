@@ -26,6 +26,7 @@ export default class ToDoEditable extends Component {
   @tracked volume = 0.5; //I think we could have a service to increase/decrease volume and play/pause, so we could save volume across sounds?
   @tracked status = 'paused';
   @tracked offset = 0; //this might not be needed, need to look int wave api
+  @tracked showMoreActions = false;
 
   id;
 
@@ -37,6 +38,11 @@ export default class ToDoEditable extends Component {
     this.id = sb.id;
     this.archived = sb.archived;
     this.audioURL = sb.audioURL;
+  }
+
+  @action
+  toggleMoreActions() {
+    this.showMoreActions = !this.showMoreActions;
   }
 
   @action
