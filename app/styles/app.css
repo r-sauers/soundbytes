@@ -1,1 +1,8 @@
 /* Ember supports plain CSS out of the box. More info: https://cli.emberjs.com/release/advanced-use/stylesheets/ */
+.offcanvas-footer {
+  bottom: 0;
+  display: flex;
+  flex-grow: 0;
+  overflow-y: visible;
+  padding: var(--bs-offcanvas-padding-y) var(--bs-offcanvas-padding-x);
+}

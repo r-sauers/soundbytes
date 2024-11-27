@@ -11,4 +11,8 @@ Router.map(function () {
   this.route('sounds_by_id', { path: '/sounds/:sound_id' });
   this.route('archived');
   this.route('404', { path: '/*path' });
+
+  this.route('splash', {
+    path: '/',
+  });
 });
