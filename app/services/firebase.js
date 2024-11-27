@@ -2,6 +2,9 @@
 import { initializeApp } from 'firebase/app';
 import { getAnalytics } from 'firebase/analytics';
 import { getStorage } from 'firebase/storage';
+import Service from '@ember/service';
+import { service } from '@ember/service';
+import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDYQ5PLZzPeYCsb9CrUpy7aljZzilhG1Jo',
@@ -17,5 +20,5 @@ const firebaseConfig = {
 export default class FirebaseService extends Service {
   app = initializeApp(firebaseConfig);
   db = getFirestore(this.app);
-  storage = getStorage(app);
+  storage = getStorage(this.app);
 }
