@@ -12,7 +12,7 @@ export default class ArchivedRoute extends Route {
       await this.auth.ensureLoggedIn();
     } catch (error) {
       console.log(error);
-      this.router.transitionTo('index');
+      this.router.transitionTo('splash');
     }
 
     const archived_projects = [

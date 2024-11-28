@@ -14,7 +14,7 @@ export default class SoundsRoute extends Route {
       await this.auth.ensureLoggedIn();
     } catch (error) {
       console.log(error);
-      this.router.transitionTo('index');
+      this.router.transitionTo('splash');
     }
     const ref = collection(this.firebase.db, 'users', this.auth.user.email, 'soundbytes');
     const docSnap = await getDocs(ref);
