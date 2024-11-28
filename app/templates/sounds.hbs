@@ -9,7 +9,7 @@
 </div>
 <CreateSoundbyte/>
 <div class="container">
-  {{#each this.soundbytes as |soundbyte|}}
+  {{#each @model as |soundbyte|}}
     <Soundbyte::Editable @soundbyte={{soundbyte}} class="my-3"/>
   {{/each}}
 </div>

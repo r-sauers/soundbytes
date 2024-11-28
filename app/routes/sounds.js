@@ -1,9 +1,12 @@
 import Route from '@ember/routing/route';
 import { service } from '@ember/service';
+import { doc, setDoc, getDocs, getDoc, collection } from 'firebase/firestore';
 
 export default class SoundsRoute extends Route {
   @service router;
   @service auth;
+  @service firebase;
+
   async model() {
     //ensure user is logged in
     try {
@@ -13,6 +16,19 @@ export default class SoundsRoute extends Route {
       console.log(error);
       this.router.transitionTo('index');
     }
-    return;
+    const ref = collection(this.firebase.db, 'users', this.auth.user.email, 'soundbytes');
+    const docSnap = await getDocs(ref);
+    const data = docSnap.docs.map((d) => {
+      return {
+        id: d.id,
+        name: 'TBD',
+        displayDate: d.data().timestamp,
+        archived: d.data().archived,
+        audioURL: d.data().url,
+        description: 'placeholder',
+      }
+    });
+    console.log(data);
+    return data;
   }
 }
