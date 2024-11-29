@@ -1,0 +1,8 @@
+[
+    {
+      "origin": ["https://csci-5117-project-2.firebaseapp.com", "https://csci-5117-project-2.web.app", "http://localhost:4200"], 
+      "method": ["GET", "DELETE", "OPTIONS"],
+      "maxAgeSeconds": 3600,
+      "responseHeader": ["Content-Type", "Authorization"]
+    }
+]
