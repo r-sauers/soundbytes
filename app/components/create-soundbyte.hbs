@@ -1,4 +1,6 @@
 <div id="create-soundbyte" style="border-style: solid; margin: 1em; padding: 1em;">
+    <button id="close" {{on "click" this.close}}>X</button>
+    <br>
     Create a new soundbyte
     <br>
     <button id="recordBtn" {{on "click" this.toggleRecording}}>
@@ -16,10 +18,15 @@
     <button id="resetAudioBtn" {{on "click" this.resetRecorder}}>
         ↺
     </button>
+    <br>
+    
     <label for="name">Name:</label>
     <Textarea @value={{this.name}} maxlength="50" id="name" name="name" rows="1" cols="20" {{on "input" this.updateName}}/>
+    <br>
+
     <label for="description">Description:</label>
     <Textarea @value={{this.description}} maxlength="200" id="description" name="description" rows="4" cols="30" {{on "input" this.updateDescription}}/>
+    <br>
 
     <button id="commitRecordingBtn" {{on "click" this.commitSoundbyte}}>
         Submit

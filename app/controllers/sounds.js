@@ -1,31 +1,23 @@
 import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
+import { service } from '@ember/service';
 
 export default class SoundsController extends Controller {
   @tracked soundbytes = [];
+  @tracked isCreateSoundbyteOpen = false;
 
   constructor() {
     super(...arguments);
-
-    this.soundbytes = [
-      {
-        id: 1,
-        name: 'Fun Tune',
-        description: `A short cheerful tune. It will quickly make you dance out, \
-and before you know it you will have listened to it so much you are annoyed.`,
-        audioURL: 'http://localhost:4200/sound1.mp3',
-        archived: false,
-        displayDate: '11/27/24',
-      },
-      {
-        id: 2,
-        name: 'Fun Tune 2',
-        description: `A short cheerful tune. It will quickly make you dance out, \
-and before you know it you will have listened to it so much you are annoyed.`,
-        audioURL: 'http://localhost:4200/sound1.mp3',
-        archived: false,
-        displayDate: '11/27/24',
-      },
-    ];
   }
+
+  // Using arrow function automatically bind 'this' to the correct context, which is the controller in this case.
+  //It is necessary because we pass closeCreateSoundbyte to the component, which needs the controller context
+  openCreateSoundbyte = () => {
+    this.isCreateSoundbyteOpen = true;
+  };
+
+  closeCreateSoundbyte = () => {
+    this.isCreateSoundbyteOpen = false;
+  };
+
 }

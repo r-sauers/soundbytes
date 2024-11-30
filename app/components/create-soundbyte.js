@@ -22,6 +22,11 @@ export default class CreateSoundbyte extends Component {
     recorder = null;
     //audio url for the user to play back recorded audio
     audioURL = null;
+
+    //this function is passed from the controller to the component
+    @action close() {
+        this.args.close();
+    }
    
     @action
     async commitSoundbyte() {
@@ -53,6 +58,7 @@ export default class CreateSoundbyte extends Component {
             this.recorder = null;
             await this.createRecorder();
             //refresh the page to show the new soundbyte
+            this.close();
             this.router.refresh();
         } else {
             this.showTryAgainPopup();

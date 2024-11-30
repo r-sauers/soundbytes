@@ -7,7 +7,12 @@
       <button type="button" class="btn btn-primary m-3">Record Sound</button>
   </div>
 </div>
-<CreateSoundbyte/>
+
+<button {{on "click" this.openCreateSoundbyte}}>Add Soundbyte</button>
+{{#if this.isCreateSoundbyteOpen}}
+  <CreateSoundbyte @close={{this.closeCreateSoundbyte}}/>
+{{/if}}
+
 <div class="container">
   {{#each @model as |soundbyte|}}
     <Soundbyte::Editable @soundbyte={{soundbyte}} class="my-3"/>
