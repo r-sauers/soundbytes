@@ -20,12 +20,8 @@ export default class SoundsRoute extends Route {
     const docSnap = await getDocs(ref);
     const data = docSnap.docs.map((d) => {
       return {
+        ...d.data(),
         id: d.id,
-        name: 'TBD',
-        displayDate: d.data().timestamp,
-        archived: d.data().archived,
-        audioURL: d.data().url,
-        description: 'placeholder',
       }
     });
     console.log(data);

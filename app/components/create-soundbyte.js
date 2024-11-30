@@ -11,6 +11,8 @@ export default class CreateSoundbyte extends Component {
     @service auth;
 
     @tracked isRecording = false;
+    @tracked name = '';
+    @tracked description = '';
 
     //array to store audio blob chunks. Blobs are immutable, otherwise would append them.
     recordedChunks = [];
@@ -42,6 +44,9 @@ export default class CreateSoundbyte extends Component {
                 timestamp: Date.now(),
                 archived: false,
                 url: url,
+                description: this.description,
+                name: this.name,
+                date_archived: null,
             });
             console.log("sent");
             //reset the recorder
@@ -129,6 +134,16 @@ export default class CreateSoundbyte extends Component {
         const audio = new Audio(this.audioURL);
         await audio.play(); //this is giving us issues
         console.log("played audio");
+    }
+
+    @action
+    updateDescription(event) {
+      this.description = event.target.value;
+    }
+
+    @action
+    updateName(event) {
+      this.name = event.target.value;
     }
   
     async createRecorder() {
