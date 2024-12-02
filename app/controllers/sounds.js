@@ -8,6 +8,12 @@ export default class SoundsController extends Controller {
 
   constructor() {
     super(...arguments);
+
+    this.addObserver('model', this, 'onModelChange');
+  }
+
+  onModelChange() {
+    this.soundbytes = this.model;
   }
 
   // Using arrow function automatically bind 'this' to the correct context, which is the controller in this case.

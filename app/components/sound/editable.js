@@ -37,7 +37,7 @@ export default class ToDoEditable extends Component {
     const sb = this.args.soundbyte;
     this.id = sb.id;
     this.archived = sb.archived;
-    this.audioURL = sb.audioURL;
+    this.audioURL = sb.url;
   }
 
   @action
