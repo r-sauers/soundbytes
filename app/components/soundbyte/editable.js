@@ -147,17 +147,40 @@ export default class ToDoEditable extends Component {
   }
 
   @action
+  async closeMoreActions(evt) {
+    const clickedName = evt.relatedTarget?.name;
+    if (!clickedName) {
+      this.showMoreActions = false;
+    } else if (
+      clickedName != 'delete-soundbyte' &&
+      clickedName != 'move-soundbyte'
+    ) {
+      this.showMoreActions = false;
+    }
+  }
+
+  @action
   async delete() {
-    console.log('deleting?');
-    await this.auth.ensureInitialized();
-    const sbRef = doc(
-      this.firebase.db,
-      'users',
-      this.auth.user.email,
-      'soundbytes',
-      this.id,
-    );
-    await deleteDoc(sbRef);
-    console.log('deleted');
+    this.showMoreActions = false;
+    Swal.fire({
+      title: 'Delete soundbyte?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#dc3545',
+      confirmButtonText: 'Delete!',
+    }).then(async (result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        await this.auth.ensureInitialized();
+        const sbRef = doc(
+          this.firebase.db,
+          'users',
+          this.auth.user.email,
+          'soundbytes',
+          this.id,
+        );
+        await deleteDoc(sbRef);
+      }
+    });
   }
 }
