@@ -13,13 +13,6 @@
         </button>
         <button id="playbackNewAudioBtn" {{on "click" this.playbackAudio}}>Playback</button>
         <button id="resetAudioBtn" {{on "click" this.resetRecorder}}>↺</button>
-
-        <label for="name">Name:</label>
-        <Textarea @value={{this.name}} maxlength="50" id="name" name="name" rows="1" cols="20" {{on "input" this.updateName}}/>
-
-        <label for="description">Description:</label>
-        <Textarea @value={{this.description}} maxlength="200" id="description" name="description" rows="1" cols="30" {{on "input" this.updateDescription}}/>
-
         <button id="commitRecording" {{on "click" this.commitSoundbyte}}>Submit</button>
         <input type="file" accept="audio/webm, audio/mp3" onchange={{this.handleFile}}/>   
     {{else}}

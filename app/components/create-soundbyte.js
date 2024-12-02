@@ -12,8 +12,6 @@ export default class CreateSoundbyte extends Component {
     @service auth;
 
     @tracked isRecording = false;
-    @tracked name = '';
-    @tracked description = '';
     @tracked started = false;
 
     //array to store audio blob chunks. Blobs are immutable, otherwise would append them.
@@ -57,8 +55,8 @@ export default class CreateSoundbyte extends Component {
                 timestamp: Date.now(),
                 archived: false,
                 url: url,
-                description: this.description,
-                name: this.name,
+                description: null,
+                name: null,
                 date_archived: null,
             });
             //reset the recorder
@@ -130,6 +128,8 @@ export default class CreateSoundbyte extends Component {
             else {
                 this.popup("Unsupported file type");
             }
+            let inputElement = event.target;
+            inputElement.value = null;
         }
         else {
             this.popup("Try again");
@@ -156,16 +156,6 @@ export default class CreateSoundbyte extends Component {
             return;
         }
         await audio.play(); //this is giving us issues
-    }
-
-    @action
-    updateDescription(event) {
-      this.description = event.target.value;
-    }
-
-    @action
-    updateName(event) {
-      this.name = event.target.value;
     }
   
     async createRecorder() {
