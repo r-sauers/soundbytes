@@ -8,9 +8,10 @@
   </div>
 </div>
 
-<button {{on "click" this.openCreateSoundbyte}}>Add Soundbyte</button>
 {{#if this.isCreateSoundbyteOpen}}
   <CreateSoundbyte @close={{this.closeCreateSoundbyte}}/>
+{{else}} 
+  <button {{on "click" this.openCreateSoundbyte}}>Add Soundbyte</button>
 {{/if}}
 
 <div class="container">
