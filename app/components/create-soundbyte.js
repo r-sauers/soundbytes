@@ -16,21 +16,18 @@ export default class CreateSoundbyte extends Component {
 
     //array to store audio blob chunks. Blobs are immutable, otherwise would append them.
     recordedChunks = [];
-    //variable to track currently recording audio chunk
-    currentChunk = null;
     //recorder object that must be recreated with every recording
     recorder = null;
     //audio url for the user to play back recorded audio
     audioURL = null;
 
-    //this function is passed from the controller to the component
+    //this function is passed from the controller to the component, since the component is a popup and can't close itself.
     @action close() {
         this.args.close();
     }
    
     @action
     async commitSoundbyte() {
-        console.log("committing soundbyte");
         if (this.recorder && this.recorder.state === "inactive" && this.recordedChunks.length > 0) {
             //delete audio URL if present
             this.destroyAudioURL();
@@ -53,10 +50,8 @@ export default class CreateSoundbyte extends Component {
                 name: this.name,
                 date_archived: null,
             });
-            console.log("sent");
             //reset the recorder
             this.recorder = null;
-            await this.createRecorder();
             //refresh the page to show the new soundbyte
             this.close();
             this.router.refresh();
@@ -72,9 +67,6 @@ export default class CreateSoundbyte extends Component {
             //stop recording
             if (this.recorder && this.recorder.state === 'recording') {
                 this.recorder.stop();
-                //push the recording onto our saved chunks
-                this.recordedChunks.push(this.currentChunk);
-                this.currentChunk = null;
             } else {
                 //if we try to stop recorder before it exists. This shouldn't technically happen
                 this.showTryAgainPopup();
@@ -103,18 +95,15 @@ export default class CreateSoundbyte extends Component {
         }
         this.destroyAudioURL();
         this.recordedChunks = [];
-        this.currentChunk = null;
     }
 
     //audio files are treated as just another recording. They can be used
     //in conjunction with other user inputs and are sequenced according to  the input order
     @action
     handleAudioFile(event) {
-        console.log("uploading audio");
         const file = event.target.files[0];
         if (file) {
-            this.audioURL = URL.createObjectURL(file);
-            const blob = new Blob([file], { type: file.type })
+            const audioBlob = new Blob([file], { type: file.type })
             this.recordedChunks.push(audioBlob);
         }
     }
@@ -122,22 +111,22 @@ export default class CreateSoundbyte extends Component {
     //make this a toggle when you get everything else to work
     @action
     async playbackAudio() {
-        console.log("playing back audio")
         if (this.recordedChunks.length < 1) {
             console.log("Can't play back, no recording provided");
             return;
         }
         //if audioURL is set, no need to recreate a URL. just stream from it.
         if (!this.audioURL) {
-            console.log("Audio URl doesn't exist, creating one");
             //combine chunks into a blob
             const audioBlob = new Blob(this.recordedChunks, { type: 'audio/webm' });
             //create a URL from Blob so to stream audio from
-            console.log(`created an audio blob of length ${audioBlob.size} from ${this.recordedChunks.length} recordings`);
             this.audioURL = URL.createObjectURL(audioBlob);
-            console.log(`Audio URL is now: ${this.audioURL}`);
         }
         const audio = new Audio(this.audioURL);
+        if (!audio.canPlayType('audio/webm')) {
+            console.log("Browser doesn't support playing webm audio files");
+            return;
+        }
         await audio.play(); //this is giving us issues
         console.log("played audio");
     }
@@ -163,10 +152,10 @@ export default class CreateSoundbyte extends Component {
         //create recorder
         const stream = await navigator.mediaDevices.getUserMedia({audio: true})
         this.recorder = new MediaRecorder(stream, {mimeType: 'audio/webm'}); //MediaRecorder only accepts webm types
-        //save recording data in our current audio chunk variable
+        //save recording data in our current audio chunk variable. This is called after this.recorder.stop()
         this.recorder.ondataavailable = (event) => {
             if (event.data.size > 0) {
-                this.currentChunk = event.data;
+                this.recordedChunks.push(event.data);
             }
         }
     }
@@ -195,15 +184,14 @@ export default class CreateSoundbyte extends Component {
 
     // Clean up the URL when component is destroyed for any reason (like on route change)
     willDestroy() {
-        console.log("called willDestroy");
         this.destroyAudioURL();
         super.willDestroy();
     }
 
     destroyAudioURL() {
-        console.log("destroying audio URL")
         if (this.audioURL) {
-            URL.revokeObjectURL(this.audioUrl);
+            console.log("destroying audio URL")
+            URL.revokeObjectURL(this.audioURL);
             this.audioURL = null;
         }
     }
