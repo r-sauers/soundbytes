@@ -6,6 +6,7 @@ import { onSnapshot, collection } from 'firebase/firestore';
 export default class SoundsController extends Controller {
   @tracked soundbytes = [];
   @tracked isCreateSoundbyteOpen = false;
+  @tracked showPopup = false;
 
   @service auth;
   @service firebase;
@@ -49,5 +50,12 @@ export default class SoundsController extends Controller {
   closeCreateSoundbyte = () => {
     this.isCreateSoundbyteOpen = false;
   };
+
+  popup = () => {
+    this.showPopup = true;
+  }
+  unpop = () => {
+    this.showPopup = false
+  }
 
 }

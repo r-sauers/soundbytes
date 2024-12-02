@@ -80,6 +80,7 @@
     "edition": "octane"
   },
   "dependencies": {
+    "@ffmpeg/ffmpeg": "^0.12.10",
     "firebase": "^11.0.2"
   }
 }
