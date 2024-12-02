@@ -14,7 +14,7 @@
 {{/if}}
 
 <div class="container">
-  {{#each @model as |soundbyte|}}
+  {{#each this.soundbytes as |soundbyte|}}
     <Soundbyte::Editable @soundbyte={{soundbyte}} class="my-3"/>
   {{/each}}
 </div>

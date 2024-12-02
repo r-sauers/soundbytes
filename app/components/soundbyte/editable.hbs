@@ -7,7 +7,7 @@
     <div class="float-end">
       <div class="position-absolute bg-light px-3 py-1 border rounded mt-4 {{unless this.showMoreActions "visually-hidden"}}">
         <ul class="navbar-nav flex-grow-1 bg-light">
-          <li class="nav-item border-bottom"><button type="button" class="nav-link text-center w-100">Delete</button></li>
+          <li class="nav-item border-bottom"><button type="button" class="nav-link text-center w-100" {{on 'click' this.delete}}>Delete</button></li>
           <li class="nav-item"><button type="button" class="nav-link text-center w-100">Move</button></li>
         </ul>
       </div>

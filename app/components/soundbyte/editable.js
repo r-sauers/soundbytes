@@ -3,7 +3,7 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
 import WaveSurfer from 'wavesurfer.js';
-/*import {
+import {
   collection,
   addDoc,
   doc,
@@ -15,7 +15,7 @@ import WaveSurfer from 'wavesurfer.js';
   deleteDoc,
   getDoc,
 } from 'firebase/firestore';
-import { deleteObject, ref } from 'firebase/storage';*/
+import { deleteObject, ref } from 'firebase/storage';
 
 export default class ToDoEditable extends Component {
   @service firebase;
@@ -144,5 +144,20 @@ export default class ToDoEditable extends Component {
       this.wavesurfer.play();
       this.status = 'playing';
     }
+  }
+
+  @action
+  async delete() {
+    console.log('deleting?');
+    await this.auth.ensureInitialized();
+    const sbRef = doc(
+      this.firebase.db,
+      'users',
+      this.auth.user.email,
+      'soundbytes',
+      this.id,
+    );
+    await deleteDoc(sbRef);
+    console.log('deleted');
   }
 }
