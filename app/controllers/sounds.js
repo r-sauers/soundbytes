@@ -53,9 +53,8 @@ export default class SoundsController extends Controller {
 
   popup = () => {
     this.showPopup = true;
-  }
+  };
   unpop = () => {
-    this.showPopup = false
-  }
-
+    this.showPopup = false;
+  };
 }

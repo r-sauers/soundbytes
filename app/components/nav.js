@@ -18,7 +18,7 @@ export default class Nav extends Component {
     ];
     this.router.on('routeWillChange', (transition) => {
       document.body.style.overflowY = 'scroll';
-    })
+    });
   }
 
   @action

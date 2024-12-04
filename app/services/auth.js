@@ -27,6 +27,13 @@ export default class AuthService extends Service {
     await this.auth.authStateReady();
   }
 
+  async requireLogin() {
+    await this.ensureInitialized();
+    if (!this.user) {
+      this.router.transitionTo('splash');
+    }
+  }
+
   async ensureLoggedIn() {
     await this.ensureInitialized();
     if (!this.user) {

@@ -2,34 +2,34 @@ import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { service } from '@ember/service';
-import { ref, getDownloadURL, uploadBytes, } from "firebase/storage";
+import { ref, getDownloadURL, uploadBytes } from 'firebase/storage';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { fetchFile, toBlobURL } from '@ffmpeg/util';
 
 export default class CreateSoundbyte extends Component {
-    @service router;
-    @service firebase;
-    @service auth;
+  @service router;
+  @service firebase;
+  @service auth;
 
-    @tracked isRecording = false;
-    @tracked started = false;
+  @tracked isRecording = false;
+  @tracked started = false;
 
-    //array to store audio blob chunks. Blobs are immutable, otherwise would append them.
-    recordedChunks = [];
-    //recorder object that must be recreated with every recording
-    recorder = null;
-    //audio url for the user to play back recorded audio
-    audioURL = null;
+  //array to store audio blob chunks. Blobs are immutable, otherwise would append them.
+  recordedChunks = [];
+  //recorder object that must be recreated with every recording
+  recorder = null;
+  //audio url for the user to play back recorded audio
+  audioURL = null;
 
-    //this function is passed from the controller to the component, since the component is a popup and can't close itself.
-    @action close() {
-        this.args.close();
-    }
+  //this function is passed from the controller to the component, since the component is a popup and can't close itself.
+  @action close() {
+    this.args.close();
+  }
 
-    @action start() {
-        this.started = true;
-    }
+  @action start() {
+    this.started = true;
+  }
 
     @action
     async commitSoundbyte() {
@@ -59,6 +59,7 @@ export default class CreateSoundbyte extends Component {
                 description: null,
                 name: null,
                 date_archived: null,
+                category: null,
             });
             //reset the recorder
             this.recorder = null;
@@ -68,31 +69,30 @@ export default class CreateSoundbyte extends Component {
         }
     }
 
-    @action
-    async toggleRecording() {
-        if (this.isRecording) {
-            //stop recording
-            if (this.recorder && this.recorder.state === 'recording') {
-                this.recorder.stop();
-            } else {
-                //if we try to stop recorder before it exists. This shouldn't technically happen
-                this.popup("Something went wrong. Please try again later");
-
-            }
-        } else {
-            //start recording. We have to create a new recorder every time we record new audio
-            await this.createRecorder();
-            //destroy the audio url. IT is being updated, so no longer relevant.
-            this.destroyAudioURL();
-            if (this.recorder && this.recorder.state === 'inactive') {
-                this.recorder.start();
-            } else {
-                //if we try to start recorder before it exists. This shouldn't technically happen
-                this.popup("something went wrong. Please try again later");
-            }
-        }
-        this.isRecording = !this.isRecording;
+  @action
+  async toggleRecording() {
+    if (this.isRecording) {
+      //stop recording
+      if (this.recorder && this.recorder.state === 'recording') {
+        this.recorder.stop();
+      } else {
+        //if we try to stop recorder before it exists. This shouldn't technically happen
+        this.popup('Something went wrong. Please try again later');
+      }
+    } else {
+      //start recording. We have to create a new recorder every time we record new audio
+      await this.createRecorder();
+      //destroy the audio url. IT is being updated, so no longer relevant.
+      this.destroyAudioURL();
+      if (this.recorder && this.recorder.state === 'inactive') {
+        this.recorder.start();
+      } else {
+        //if we try to start recorder before it exists. This shouldn't technically happen
+        this.popup('something went wrong. Please try again later');
+      }
     }
+    this.isRecording = !this.isRecording;
+  }
 
     //this can be called even if a recording is in process
     @action
@@ -196,35 +196,39 @@ export default class CreateSoundbyte extends Component {
       return 0;
     }
 
-    async updateNextSoundbyteID() {
-        const d = doc(this.firebase.db, 'users', this.auth.user.email, 'userData', 'soundbyteMetaData');
-        const docSnap = await getDoc(d);
-        if (docSnap.exists()) {
-            const current = docSnap.data().nextID;
-            await setDoc(d, {nextID: current+1})
-        } else { //just in case
-            await setDoc(d, {nextID: 1});
-        }
+  async updateNextSoundbyteID() {
+    const d = doc(
+      this.firebase.db,
+      'users',
+      this.auth.user.email,
+      'userData',
+      'soundbyteMetaData',
+    );
+    const docSnap = await getDoc(d);
+    if (docSnap.exists()) {
+      const current = docSnap.data().nextID;
+      await setDoc(d, { nextID: current + 1 });
+    } else {
+      //just in case
+      await setDoc(d, { nextID: 1 });
     }
+  }
 
     popup(message) {
         // this.args.popup(message);
         alert(message);
     }
 
-    // Clean up the URL when component is destroyed for any reason (like on route change)
-    willDestroy() {
-        this.destroyAudioURL();
-        super.willDestroy();
+  // Clean up the URL when component is destroyed for any reason (like on route change)
+  willDestroy() {
+    this.destroyAudioURL();
+    super.willDestroy();
+  }
+
+  destroyAudioURL() {
+    if (this.audioURL) {
+      URL.revokeObjectURL(this.audioURL);
+      this.audioURL = null;
     }
-
-    destroyAudioURL() {
-        if (this.audioURL) {
-            URL.revokeObjectURL(this.audioURL);
-            this.audioURL = null;
-        }
-    }
-
-
-    
+  }
 }

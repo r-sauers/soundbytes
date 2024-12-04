@@ -16,13 +16,18 @@ export default class SoundsRoute extends Route {
       console.log(error);
       this.router.transitionTo('splash');
     }
-    const ref = collection(this.firebase.db, 'users', this.auth.user.email, 'soundbytes');
+    const ref = collection(
+      this.firebase.db,
+      'users',
+      this.auth.user.email,
+      'soundbytes',
+    );
     const docSnap = await getDocs(ref);
     const data = docSnap.docs.map((d) => {
       return {
         ...d.data(),
         id: d.id,
-      }
+      };
     });
     console.log(data);
     return data;
