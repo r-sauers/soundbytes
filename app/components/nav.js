@@ -23,8 +23,8 @@ export default class Nav extends Component {
 
   @action
   async logout() {
-    await this.auth.sign_out();
     this.router.transitionTo('splash');
+    await this.auth.sign_out();
   }
 
   @action
