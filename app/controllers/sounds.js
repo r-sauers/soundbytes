@@ -19,6 +19,12 @@ export default class SoundsController extends Controller {
     this.addObserver('model', this, 'onModelChange');
   }
 
+  willDestroy() {
+    if (this.unsub != null) {
+      this.unsub();
+    }
+  }
+
   onModelChange() {
     this.soundbytes = this.model;
 
