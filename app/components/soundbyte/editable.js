@@ -28,6 +28,11 @@ export default class ToDoEditable extends Component {
   @tracked offset = 0; //this might not be needed, need to look int wave api
   @tracked showMoreActions = false;
 
+  @tracked editingName = false;
+  @tracked name = '';
+  @tracked editingDescription = false;
+  @tracked description = '';
+
   id;
 
   wavesurfer = null;
@@ -38,6 +43,97 @@ export default class ToDoEditable extends Component {
     this.id = sb.id;
     this.archived = sb.archived;
     this.audioURL = sb.url;
+    this.name = sb.name;
+    this.description = sb.description;
+  }
+
+  @action
+  async updateName(evt) {
+    let nameValue = '';
+    if (evt.type == 'focusout') {
+      nameValue = evt.target.value;
+    } else if (evt.type == 'submit') {
+      evt.preventDefault();
+      nameValue = evt.target['soundbyteName'].value;
+    }
+
+    const sbRef = doc(
+      this.firebase.db,
+      'users',
+      this.auth.user.email,
+      'soundbytes',
+      this.id,
+    );
+
+    try {
+      await updateDoc(sbRef, {
+        name: nameValue,
+      });
+
+      this.editingName = false;
+      this.name = nameValue;
+    } catch (err) {
+      console.log(err);
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: `We couldn't update the soundbyte name!`,
+      });
+      this.editingName = false;
+    }
+  }
+
+  @action
+  beginEditName() {
+    this.editingName = true;
+  }
+
+  @action
+  async updateDescription(evt) {
+    let description = '';
+    if (evt.type == 'focusout') {
+      description = evt.target.value;
+    } else if (evt.type == 'submit') {
+      evt.preventDefault();
+      description = evt.target['soundbyteDescription'].value;
+    } else if (evt.type == 'keypress') {
+      if (evt.key === 'Enter' && !evt.shiftKey) {
+        evt.preventDefault();
+        const newEvent = new Event('submit', { cancelable: true });
+        evt.target.form.dispatchEvent(newEvent);
+      }
+      return;
+    }
+
+    const sbRef = doc(
+      this.firebase.db,
+      'users',
+      this.auth.user.email,
+      'soundbytes',
+      this.id,
+    );
+
+    try {
+      await updateDoc(sbRef, {
+        description: description,
+      });
+
+      this.editingDescription = false;
+      this.description = description;
+    } catch (err) {
+      console.log(err);
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: `We couldn't update the soundbyte description!`,
+      });
+      this.editingDescription = false;
+    }
+  }
+
+  @action
+  beginEditDescription() {
+    this.editingDescription = true;
   }
 
   @action
