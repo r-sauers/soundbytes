@@ -4,7 +4,8 @@ import { tracked } from '@glimmer/tracking';
 import { service } from '@ember/service';
 import { ref, getDownloadURL, uploadBytes, } from "firebase/storage";
 import { doc, setDoc, getDoc } from 'firebase/firestore';
-import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
+import { FFmpeg } from '@ffmpeg/ffmpeg';
+import { fetchFile, toBlobURL } from '@ffmpeg/util';
 
 export default class CreateSoundbyte extends Component {
     @service router;
@@ -96,7 +97,6 @@ export default class CreateSoundbyte extends Component {
     //this can be called even if a recording is in process
     @action
     resetRecorder() {
-        console.log("resetting recorder");
         if (this.recorder && this.recorder.state == 'recording') {
             this.recorder.stop();
         }
@@ -107,22 +107,31 @@ export default class CreateSoundbyte extends Component {
     //audio files are treated as just another recording. They can be used
     //in conjunction with other user inputs and are sequenced according to  the input order
     @action
-    async handleAudioFiles(event) {
+    async handleAudioFile(event) {
         const file = event.target.files[0];
+        console.log(file.type);
         if (file) {
             //convert it to webm if mp3
-            if (file.type === "audio/mp3") {
-                const ffmpeg = createFFmpeg();
+            if (file.type === "audio/mpeg") {
+                // const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd'
+                const ffmpeg = new FFmpeg();
+                // console.log("hi")
+                // await ffmpeg.load({
+                //     coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
+                //     wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
+                // });
                 await ffmpeg.load();
+                console.log("hi2")
                 const fileData = await fetchFile(file);
-                ffmpeg.FS('writeFile', 'input.mp3', fileData);
-                await ffmpeg.run('-i', 'input.mp3', '-c:a', 'libopus', 'output.webm');
-                const outputData = ffmpeg.FS('readFile', 'output.webm');
+                console.log("hi3")
+                await ffmpeg.writeFile('input.mp3', fileData);
+                await ffmpeg.exec(['-i', 'input.mp3', '-c:a', 'libopus', 'output.webm']);
+                const outputData = await ffmpeg.readFile('output.webm');
                 const audioBlob = new Blob([outputData.buffer], { type: 'audio/webm' });
                 this.recordedChunks.push(audioBlob);
             }
             else if (file.type === "audio/webm") {
-                const audioBlob = new Blob([file], { type: file.type })
+                const audioBlob = new Blob([file], { type: 'audio/webm' });
                 this.recordedChunks.push(audioBlob);
             }
             else {
@@ -130,6 +139,7 @@ export default class CreateSoundbyte extends Component {
             }
             let inputElement = event.target;
             inputElement.value = null;
+            console.log("chunks is ", this.recordedChunks.size, " parts long")
         }
         else {
             this.popup("Try again");
@@ -159,7 +169,6 @@ export default class CreateSoundbyte extends Component {
     }
   
     async createRecorder() {
-        console.log("creating recorder")
         //if the browser doesn't support recording
         if (!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) {
             this.popup("Your browser doesn't support audio recording");
@@ -168,7 +177,7 @@ export default class CreateSoundbyte extends Component {
         //create recorder
         const stream = await navigator.mediaDevices.getUserMedia({audio: true})
         this.recorder = new MediaRecorder(stream, {mimeType: 'audio/webm'}); //MediaRecorder only accepts webm types
-        //save recording data in our current audio chunk variable. This is called after this.recorder.stop()
+        //save recording data in our current audio chunk variable. This is called after this.recorder.stop() is called
         this.recorder.ondataavailable = (event) => {
             if (event.data.size > 0) {
                 this.recordedChunks.push(event.data);
@@ -199,7 +208,8 @@ export default class CreateSoundbyte extends Component {
     }
 
     popup(message) {
-        this.args.popup(message);
+        // this.args.popup(message);
+        alert(message);
     }
 
     // Clean up the URL when component is destroyed for any reason (like on route change)
