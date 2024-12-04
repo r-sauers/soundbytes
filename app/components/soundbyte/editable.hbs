@@ -1,17 +1,39 @@
 <div class="card" ...attributes>
   <h5 class="card-header">
-    {{@soundbyte.name}}
+    {{#if this.editingName}}
+        <form {{on 'submit' this.updateName}} class="d-inline-block" aria-label="Edit Name">
+          <input type="text" name="soundbyteName" class="form-control" aria-label="Edit soundbyte name"
+            placeholder={{unless this.name "New Soundbyte"}}
+            value={{this.name}}
+            {{autofocus}}
+            {{on 'focusout' this.updateName}}
+          />
+        </form>
+    {{else}}
+      <button type="button" class="nav-link d-inline-block" {{on 'click' this.beginEditName}}>
+        {{if this.name this.name "New Soundbyte"}}
+        <i class="ms-1 bi bi-pencil-square"></i>
+      </button>
+    {{/if}}
     <span class="align-middle fs-6 ms-3 text-secondary">
       ({{@soundbyte.timestamp}})
     </span>
     <div class="float-end">
       <div class="position-absolute bg-light px-3 py-1 border rounded mt-4 {{unless this.showMoreActions "visually-hidden"}}">
         <ul class="navbar-nav flex-grow-1 bg-light">
-          <li class="nav-item border-bottom"><button type="button" name="delete-soundbyte" class="nav-link text-center w-100" {{on 'click' this.delete}}>Delete</button></li>
-          <li class="nav-item"><button type="button" name="move-soundbyte" class="nav-link text-center w-100">Move</button></li>
+          <li class="nav-item border-bottom">
+            <button type="button" name="delete-soundbyte"
+              class="nav-link text-center w-100"
+              {{on 'click' this.delete}}>Delete</button>
+          </li>
+          <li class="nav-item">
+            <button type="button" name="move-soundbyte" class="nav-link text-center w-100">Move</button>
+          </li>
         </ul>
       </div>
-      <button type="button" class="btn btn-light m-0 p-0" {{on 'click' this.toggleMoreActions}} {{on 'focusout' this.closeMoreActions}}>
+      <button type="button" class="btn btn-light m-0 p-0"
+        {{on 'click' this.toggleMoreActions}}
+        {{on 'focusout' this.closeMoreActions}}>
         <i class="m-0 p-0 bi bi-three-dots-vertical"></i>
       </button>
     </div>
@@ -35,8 +57,23 @@
         </div>
       </div>
       <div class="col-12 col-lg-6">
-        <h5 class="card-title">Description</h5>
-        <p class="card-text">{{@soundbyte.description}}</p>
+        <h5 class="card-title">
+          <button type="button" class="nav-link d-inline-block" {{on 'click' this.beginEditDescription}}>
+            Description
+            <i class="ms-1 bi bi-pencil-square"></i>
+          </button>
+        </h5>
+        {{#if this.editingDescription}}
+          <form aria-label="Edit Description" {{on 'submit' this.updateDescription}}>
+            <textarea class="form-control" aria-label="Description"{{autofocus}} name="soundbyteDescription"
+              {{on 'focusout' this.updateDescription}}
+              {{on 'keypress' this.updateDescription}}
+              placeholder={{unless this.description "Soundbyte description"}}
+            >{{if this.description this.description}}</textarea>
+          </form>
+        {{else}}
+          <p class="card-text {{unless this.description 'text-body-secondary'}}">{{if this.description this.description "Soundbyte description"}}</p>
+        {{/if}}
       </div>
     </div>
   </div>
