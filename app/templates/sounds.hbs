@@ -11,7 +11,7 @@
 {{#if this.isCreateSoundbyteOpen}}
   <CreateSoundbyte @close={{this.closeCreateSoundbyte}}/>
 {{else}} 
-  <button {{on "click" this.openCreateSoundbyte}}>Add Soundbyte</button>
+  <button type="button" {{on "click" this.openCreateSoundbyte}}>Add Soundbyte</button>
 {{/if}}
 
 <div class="container">

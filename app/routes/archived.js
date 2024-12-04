@@ -4,7 +4,7 @@ import { service } from '@ember/service';
 export default class ArchivedRoute extends Route {
   @service router;
   @service auth;
-  
+
   async model() {
     //ensure user is logged in
     try {
