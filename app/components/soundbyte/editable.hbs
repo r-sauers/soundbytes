@@ -47,7 +47,7 @@
       <div class="col-12 col-lg-6">
         <div id="waveform-{{@soundbyte.id}}" {{did-insert this.initWaveSurfer}}></div>
         <div class="d-flex justify-content-center">
-          <button type="button" class="btn btn-primary rounded-circle" {{on 'click' this.skipBackward}}>&lt;&lt;</button>
+          <button type="button" class="btn btn-primary rounded-circle" {{on 'click' this.skipBackward}}><i class="bi bi-rewind-fill"></i></button>
           <button type="button" class="btn btn-primary rounded-pill mx-1" {{on 'click' this.togglePlayback}}>
             {{#if (eq this.status 'paused')}}
               Play
@@ -57,7 +57,7 @@
               Restart
             {{/if}}
           </button>
-          <button type="button" class="btn btn-primary rounded-circle" {{on 'click' this.skipForward}}>&gt;&gt;</button>
+          <button type="button" class="btn btn-primary rounded-circle" {{on 'click' this.skipForward}}><i class="bi bi-fast-forward-fill"></i></button>
         </div>
       </div>
       <div class="col-12 col-lg-6">
