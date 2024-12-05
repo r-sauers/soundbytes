@@ -29,7 +29,6 @@ export default class SoundsRoute extends Route {
         id: d.id,
       };
     });
-    console.log(data);
     return data;
   }
 }

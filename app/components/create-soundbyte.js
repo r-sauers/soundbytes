@@ -31,43 +31,48 @@ export default class CreateSoundbyte extends Component {
     this.started = true;
   }
 
-    @action
-    async commitSoundbyte() {
-        if (!this.recorder || this.recordedChunks.length < 1) {
-            this.popup("Upload a sound before you commit");
-        }
-        else if (this.recorder.state !== "inactive") {
-            this.popup("Stop recording before you commit");
-        } else {
-            //delete audio URL if present
-            this.destroyAudioURL();
-            //create a new audio blob from the array of audio chunks
-            const audioBlob = new Blob(this.recordedChunks, { type: 'audio/webm' });
-            this.recordedChunks = [];
-            //update the storage, which makes our audio accessible by url
-            const nextID = await this.getNextSoundbyteID(); //these can probably be implemented by a service since it will be a common function
-            await this.updateNextSoundbyteID();
-            const fileRef = ref(this.firebase.storage, `audio/users/${this.auth.user.email}/${nextID.toString()}.webm`);
-            await uploadBytes(fileRef, audioBlob);
-            //update firestore. The soundbyte object will contain the url that has the audio data
-            const d = doc(this.firebase.db, 'users', this.auth.user.email, 'soundbytes', nextID.toString());
-            const url = await getDownloadURL(fileRef);
-            await setDoc(d, {
-                timestamp: Date.now(),
-                archived: false,
-                url: url,
-                description: null,
-                name: null,
-                date_archived: null,
-                category: null,
-            });
-            //reset the recorder
-            this.recorder = null;
-            //refresh the page to show the new soundbyte
-            this.close();
-            this.router.refresh();
-        }
+  @action
+  async commitSoundbyte() {
+    if (!this.recorder || this.recordedChunks.length < 1) {
+      this.popup('Upload a sound before you commit');
+    } else if (this.recorder.state !== 'inactive') {
+      this.popup('Stop recording before you commit');
+    } else {
+      //delete audio URL if present
+      this.destroyAudioURL();
+      //create a new audio blob from the array of audio chunks
+      const audioBlob = new Blob(this.recordedChunks, { type: 'audio/webm' });
+      this.recordedChunks = [];
+      //update the storage, which makes our audio accessible by url
+      const nextID = await this.getNextSoundbyteID(); //these can probably be implemented by a service since it will be a common function
+      await this.updateNextSoundbyteID();
+      const fileRef = ref(
+        this.firebase.storage,
+        `audio/users/${this.auth.user.email}/${nextID.toString()}.webm`,
+      );
+      await uploadBytes(fileRef, audioBlob);
+      //update firestore. The soundbyte object will contain the url that has the audio data
+      const d = doc(
+        this.firebase.db,
+        'users',
+        this.auth.user.email,
+        'soundbytes',
+        nextID.toString(),
+      );
+      const url = await getDownloadURL(fileRef);
+      await setDoc(d, {
+        timestamp: Date.now(),
+        archived: false,
+        url: url,
+        description: null,
+        name: null,
+        date_archived: null,
+      });
+      //reset the recorder
+      this.recorder = null;
+      this.close();
     }
+  }
 
   @action
   async toggleRecording() {
@@ -167,7 +172,7 @@ export default class CreateSoundbyte extends Component {
         }
         await audio.play(); //this is giving us issues
     }
-  
+
     async createRecorder() {
         //if the browser doesn't support recording
         if (!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) {
@@ -184,7 +189,7 @@ export default class CreateSoundbyte extends Component {
             }
         }
     }
-    
+
     async getNextSoundbyteID() {
       const d = doc(this.firebase.db, 'users', this.auth.user.email, 'userData', 'soundbyteMetaData');
       const docSnap = await getDoc(d);

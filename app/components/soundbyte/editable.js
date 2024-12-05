@@ -33,8 +33,12 @@ export default class ToDoEditable extends Component {
   @tracked editingDescription = false;
   @tracked description = '';
 
-  id;
+  isDestroyed = false;
+  id = undefined;
+  displayDate = '';
 
+  audioBlob = null;
+  audioExt = '';
   wavesurfer = null;
 
   constructor() {
@@ -42,9 +46,19 @@ export default class ToDoEditable extends Component {
     const sb = this.args.soundbyte;
     this.id = sb.id;
     this.archived = sb.archived;
-    this.audioURL = sb.url;
     this.name = sb.name;
     this.description = sb.description;
+    this.url = sb.url;
+    let date = new Date(sb.timestamp);
+    let hour = ((date.getHours() + 11) % 12) + 1;
+    let meridian = date.getHours() / 12 < 1 ? 'AM' : 'PM';
+    this.displayDate = `${date.toDateString()} ${hour}:${date.getMinutes()} ${meridian}`;
+  }
+
+  async initAudioBlob(url) {
+    const resp = await fetch(url);
+    this.audioBlob = await resp.blob();
+    this.audioExt = url.slice(url.lastIndexOf('.'), url.lastIndexOf('?'));
   }
 
   @action
@@ -141,18 +155,65 @@ export default class ToDoEditable extends Component {
     this.showMoreActions = !this.showMoreActions;
   }
 
+  /* https://stackoverflow.com/questions/3665115/how-to-create-a-file-in-memory-for-user-to-download-but-not-through-server */
+  download(blob, filename) {
+    var element = document.createElement('a');
+    element.setAttribute('href', URL.createObjectURL(blob));
+    element.setAttribute('download', filename);
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
+  }
+
+  @action
+  share() {
+    let name = this.name;
+    if (!name) {
+      name = 'soundbyte';
+    }
+    const audioFile = new File([this.audioBlob], name + this.audioExt, {
+      type: this.audioBlob.type,
+    });
+    if (navigator.canShare && navigator.canShare({ files: [audioFile] })) {
+      navigator
+        .share({
+          files: [audioFile],
+          title: 'Vacation Pictures',
+          text: 'Photos from September 27 to October 14.',
+        })
+        .then(() => console.log('Share was successful.'))
+        .catch((error) => console.log('Sharing failed', error));
+    } else {
+      console.log(`Your system doesn't support sharing files.`);
+      this.download(this.audioBlob, name + this.audioExt);
+    }
+  }
+
   @action
   initWaveSurfer() {
-    this.wavesurfer = WaveSurfer.create({
-      container: `#waveform-${this.id}`,
-      waveColor: 'violet',
-      progressColor: 'purple',
-      height: 100,
-      barWidth: 3,
-    });
-    this.wavesurfer.load(this.audioURL);
-    this.wavesurfer.on('finish', () => {
-      this.status = 'finished';
+    this.initAudioBlob(this.url).then(() => {
+      if (!this.wavesurfer) {
+        this.wavesurfer = WaveSurfer.create({
+          container: `#waveform-${this.id}`,
+          waveColor: 'violet',
+          progressColor: 'purple',
+          height: 100,
+          barWidth: 3,
+        });
+        const componentInstance = this;
+        this.wavesurfer.load(URL.createObjectURL(this.audioBlob)).then(() => {
+          if (componentInstance.isDestroyed) {
+            componentInstance.wavesurfer.destroy();
+          }
+        });
+        this.wavesurfer.on('finish', () => {
+          this.status = 'finished';
+        });
+      }
     });
   }
 
@@ -278,5 +339,10 @@ export default class ToDoEditable extends Component {
         await deleteDoc(sbRef);
       }
     });
+  }
+
+  willDestroy() {
+    super.willDestroy();
+    this.isDestroyed = true;
   }
 }
