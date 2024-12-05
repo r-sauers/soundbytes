@@ -1,7 +1,7 @@
 <div class="card" ...attributes>
   <div class="card-header">
-    <div class="float-end">
-      <div class="position-absolute bg-light px-3 py-1 border rounded mt-4 {{unless this.showMoreActions "visually-hidden"}}">
+    <div class="float-end div-grow-left">
+      <div class="position-absolute bg-light z-3 px-3 py-1 border rounded mt-4 div-grow-right {{unless this.showMoreActions "visually-hidden"}}">
         <ul class="navbar-nav flex-grow-1 bg-light">
           <li class="nav-item border-bottom">
             <button type="button" name="delete-soundbyte"
@@ -19,8 +19,8 @@
         <i class="m-0 p-0 bi bi-three-dots-vertical"></i>
       </button>
     </div>
-    <div>
-      <h5 class="me-3 d-inline-block">
+    <div class="text-center text-sm-start">
+      <h5 class="me-3 mb-0 d-inline-block">
         {{#if this.editingName}}
           <form {{on 'submit' this.updateName}} class="d-inline-block" aria-label="Edit Name">
             <input type="text" name="soundbyteName" class="form-control" aria-label="Edit soundbyte name"
@@ -37,7 +37,7 @@
           </button>
         {{/if}}
       </h5>
-      <h6 class="fs-6 text-secondary d-inline-block">
+      <h6 class="fs-6 text-secondary d-inline-block me-4 me-sm-0">
         ({{this.displayDate}})
       </h6>
     </div>

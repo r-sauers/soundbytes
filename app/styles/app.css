@@ -92,3 +92,9 @@
 .waveform-player {
   background: rgb(240, 240, 240);
 }
+.div-grow-left {
+  direction: rtl;
+}
+.div-grow-right {
+  direction: ltr;
+}
