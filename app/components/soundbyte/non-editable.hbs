@@ -1,0 +1,29 @@
+<div class="card" ...attributes>
+  <h5 class="card-header">
+    {{@welcome.name}}
+  </h5>
+  <div class="card-body container">
+    <div class="row">
+      <div class="col-12 col-lg-6">
+        <div id="waveform-{{this.id}}" {{did-insert this.initWaveSurfer}}></div>
+        <div class="d-flex justify-content-center">
+          <button type="button" class="btn btn-primary rounded-circle" {{on 'click' this.skipBackward}}>&lt;&lt;</button>
+          <button type="button" class="btn btn-primary rounded-pill mx-1" {{on 'click' this.togglePlayback}}>
+            {{#if (eq this.status 'paused')}}
+              Play
+            {{else if (eq this.status 'playing')}}
+              Pause
+            {{else}}
+              Restart
+            {{/if}}
+          </button>
+          <button type="button" class="btn btn-primary rounded-circle" {{on 'click' this.skipForward}}>&gt;&gt;</button>
+        </div>
+      </div>
+      <div class="col-12 col-lg-6">
+        <h5 class="card-title">Description</h5>
+        <p class="card-text">{{@welcome.description}}</p>
+      </div>
+    </div>
+  </div>
+</div>
