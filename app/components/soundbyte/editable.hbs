@@ -1,23 +1,5 @@
 <div class="card" ...attributes>
-  <h5 class="card-header">
-    {{#if this.editingName}}
-        <form {{on 'submit' this.updateName}} class="d-inline-block" aria-label="Edit Name">
-          <input type="text" name="soundbyteName" class="form-control" aria-label="Edit soundbyte name"
-            placeholder={{unless this.name "New Soundbyte"}}
-            value={{this.name}}
-            {{autofocus}}
-            {{on 'focusout' this.updateName}}
-          />
-        </form>
-    {{else}}
-      <button type="button" class="nav-link d-inline-block" {{on 'click' this.beginEditName}}>
-        {{if this.name this.name "New Soundbyte"}}
-        <i class="ms-1 bi bi-pencil-square"></i>
-      </button>
-    {{/if}}
-    <span class="align-middle fs-6 ms-3 text-secondary">
-      ({{this.displayDate}})
-    </span>
+  <div class="card-header">
     <div class="float-end">
       <div class="position-absolute bg-light px-3 py-1 border rounded mt-4 {{unless this.showMoreActions "visually-hidden"}}">
         <ul class="navbar-nav flex-grow-1 bg-light">
@@ -37,7 +19,29 @@
         <i class="m-0 p-0 bi bi-three-dots-vertical"></i>
       </button>
     </div>
-  </h5>
+    <div>
+      <h5 class="me-3 d-inline-block">
+        {{#if this.editingName}}
+          <form {{on 'submit' this.updateName}} class="d-inline-block" aria-label="Edit Name">
+            <input type="text" name="soundbyteName" class="form-control" aria-label="Edit soundbyte name"
+              placeholder={{unless this.name "New Soundbyte"}}
+              value={{this.name}}
+              {{autofocus}}
+              {{on 'focusout' this.updateName}}
+            />
+          </form>
+        {{else}}
+          <button type="button" class="nav-link d-inline-block" {{on 'click' this.beginEditName}}>
+            {{if this.name this.name "New Soundbyte"}}
+            <i class="ms-1 bi bi-pencil-square"></i>
+          </button>
+        {{/if}}
+      </h5>
+      <h6 class="fs-6 text-secondary d-inline-block">
+        ({{this.displayDate}})
+      </h6>
+    </div>
+  </div>
   <div class="card-body container">
     <div class="row">
       <div class="col-12 col-lg-6">
