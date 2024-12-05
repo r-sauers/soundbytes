@@ -69,9 +69,7 @@ export default class CreateSoundbyte extends Component {
       });
       //reset the recorder
       this.recorder = null;
-      //refresh the page to show the new soundbyte
       this.close();
-      this.router.refresh();
     }
   }
 

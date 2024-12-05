@@ -204,10 +204,10 @@ export default class ToDoEditable extends Component {
           height: 100,
           barWidth: 3,
         });
-        const idk = this;
+        const componentInstance = this;
         this.wavesurfer.load(URL.createObjectURL(this.audioBlob)).then(() => {
-          if (idk.isDestroyed) {
-            idk.wavesurfer.destroy();
+          if (componentInstance.isDestroyed) {
+            componentInstance.wavesurfer.destroy();
           }
         });
         this.wavesurfer.on('finish', () => {

@@ -11,6 +11,8 @@ export default class SoundsController extends Controller {
   @service auth;
   @service firebase;
 
+  modelInitialized = false;
+
   unsub = null;
 
   constructor() {
@@ -19,7 +21,7 @@ export default class SoundsController extends Controller {
     this.addObserver('model', this, 'onModelChange');
   }
 
-  onModelChange() {
+  onModelInit() {
     this.soundbytes = this.model;
 
     const ref = collection(
@@ -28,17 +30,52 @@ export default class SoundsController extends Controller {
       this.auth.user.email,
       'soundbytes',
     );
-    this.unsub = onSnapshot(ref, (collection) => {
-      const data = collection.docs.map((d) => {
-        return {
-          ...d.data(),
-          id: d.id,
-        };
-      });
+    this.unsub = onSnapshot(ref, (snapshot) => {
+      const changes = snapshot.docChanges();
 
-      console.log(data);
-      this.soundbytes = data;
+      // get the relevant changes to the collection (additions/deletions)
+      // modifications aren't relevant to the collection
+      const relevantChanges = changes.reduce((acc, change) => {
+        if (change.type == 'modified') return acc;
+        acc[change.doc.id] = {
+          data: change.doc.data(),
+          type: change.type,
+          id: change.id,
+        };
+        return acc;
+      }, {});
+
+      if (relevantChanges) {
+        let changed = false;
+
+        // Remove deleted soundbytes
+        let updated = this.soundbytes.filter((sb) => {
+          let relevantChange = relevantChanges[sb.id];
+          if (!relevantChange) return true;
+
+          delete relevantChanges[sb.id];
+          if (relevantChange.type == 'added') return true;
+
+          changed = true;
+          return false;
+        });
+
+        // Add new soundbytes
+        for (let id in relevantChanges) {
+          let relevantChange = relevantChanges[id];
+          updated.push({ ...relevantChange.data, id: id });
+          changed = true;
+        }
+
+        if (changed) this.soundbytes = updated;
+      }
     });
+  }
+
+  onModelChange() {
+    if (!this.modelInitialized) {
+      this.onModelInit();
+    }
   }
 
   // Using arrow function automatically bind 'this' to the correct context, which is the controller in this case.
