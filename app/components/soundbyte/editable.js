@@ -33,7 +33,8 @@ export default class ToDoEditable extends Component {
   @tracked editingDescription = false;
   @tracked description = '';
 
-  id;
+  id = undefined;
+  displayDate = '';
 
   wavesurfer = null;
 
@@ -45,6 +46,10 @@ export default class ToDoEditable extends Component {
     this.audioURL = sb.url;
     this.name = sb.name;
     this.description = sb.description;
+    let date = new Date(sb.timestamp);
+    let hour = ((date.getHours() + 11) % 12) + 1;
+    let meridian = date.getHours() / 12 < 1 ? 'AM' : 'PM';
+    this.displayDate = `${date.toDateString()} ${hour}:${date.getMinutes()} ${meridian}`;
   }
 
   @action
