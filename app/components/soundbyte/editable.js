@@ -376,8 +376,8 @@ export default class ToDoEditable extends Component {
     const currentProject = `No Project`;
 
     Swal.fire({
-      title: `Select field validation`,
-      html: `<i>Hint: Add more projects in the category bar!</i>`,
+      title: `Select Project`,
+      html: `<i>Hint: Add more projects in the navigation sidebar!</i>`,
       input: `select`,
       inputOptions: projects,
       inputValue: currentProject,
