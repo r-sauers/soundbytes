@@ -325,19 +325,60 @@ export default class ToDoEditable extends Component {
       showCancelButton: true,
       confirmButtonColor: '#dc3545',
       confirmButtonText: 'Delete!',
-    }).then(async (result) => {
-      /* Read more about isConfirmed, isDenied below */
-      if (result.isConfirmed) {
-        await this.auth.ensureInitialized();
-        const sbRef = doc(
-          this.firebase.db,
-          'users',
-          this.auth.user.email,
-          'soundbytes',
-          this.id,
-        );
-        await deleteDoc(sbRef);
-      }
+      preConfirm: async () => {
+        Swal.resetValidationMessage();
+        try {
+          await this.auth.ensureInitialized();
+          const sbRef = doc(
+            this.firebase.db,
+            'users',
+            this.auth.user.email,
+            'soundbytes',
+            this.id,
+          );
+          await deleteDoc(sbRef);
+        } catch (err) {
+          Swal.showValidationMessage('Something went wrong!');
+          return false;
+        }
+      },
+    });
+  }
+
+  @action
+  async move() {
+    const projects = {
+      none: `No Project`,
+      test: `Test Project`,
+    };
+    const currentProject = `No Project`;
+
+    Swal.fire({
+      title: `Select field validation`,
+      html: `<i>Hint: Add more projects in the category bar!</i>`,
+      input: `select`,
+      inputOptions: projects,
+      inputValue: currentProject,
+      showCancelButton: true,
+      preConfirm: async (project) => {
+        Swal.showValidationMessage('Not Implemented!');
+        return false;
+        Swal.resetValidationMessage();
+        try {
+          await this.auth.ensureInitialized();
+          const sbRef = doc(
+            this.firebase.db,
+            'users',
+            this.auth.user.email,
+            'soundbytes',
+            this.id,
+          );
+          await updateDoc(sbRef, {});
+        } catch (err) {
+          Swal.showValidationMessage('Something went wrong!');
+          return false;
+        }
+      },
     });
   }
 
