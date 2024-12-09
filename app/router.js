@@ -15,5 +15,5 @@ Router.map(function () {
   this.route('splash', {
     path: '/',
   });
-  this.route('sounds_by_cat', { path: '/sounds/:cat'});
+  this.route('sounds_by_cat', { path: '/sounds/:cat' });
 });

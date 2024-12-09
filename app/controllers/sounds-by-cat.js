@@ -1,7 +1,8 @@
 import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
 import { service } from '@ember/service';
-import { onSnapshot, collection } from 'firebase/firestore';
+import { onSnapshot} from 'firebase/firestore';
+import { doc, query, where, orderBy, setDoc, getDocs, getDoc, collection } from 'firebase/firestore';
 
 export default class SoundsController extends Controller {
   @tracked soundbytes = [];
@@ -11,6 +12,8 @@ export default class SoundsController extends Controller {
   @service auth;
   @service firebase;
 
+  @tracked cat = "temp";
+  
   unsub = null;
 
   constructor() {
@@ -21,14 +24,20 @@ export default class SoundsController extends Controller {
 
   onModelChange() {
     this.soundbytes = this.model;
-
+    console.log("\\\\\\");
+    console.log(this.cat);
     const ref = collection(
       this.firebase.db,
       'users',
       this.auth.user.email,
       'soundbytes',
     );
-    this.unsub = onSnapshot(ref, (collection) => {
+    const ref2 = query(
+        ref,
+        where('category', '==', this.cat),
+        orderBy('created', 'desc'),
+    );
+    this.unsub = onSnapshot(ref2, (collection) => {
       const data = collection.docs.map((d) => {
         return {
           ...d.data(),
@@ -37,7 +46,7 @@ export default class SoundsController extends Controller {
       });
 
       console.log(data);
-      // console.log('^');
+      console.log('^');
       this.soundbytes = data;
     });
   }

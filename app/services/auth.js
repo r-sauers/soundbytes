@@ -15,6 +15,7 @@ import { tracked } from '@glimmer/tracking';
 
 export default class AuthService extends Service {
   @service firebase;
+  @service router;
 
   auth = getAuth(this.firebase.app);
 
@@ -30,7 +31,9 @@ export default class AuthService extends Service {
   async requireLogin() {
     await this.ensureInitialized();
     if (!this.user) {
+      console.log('test bad1');
       this.router.transitionTo('splash');
+      console.log('test bad');
     }
   }
 
