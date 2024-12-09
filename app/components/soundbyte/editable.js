@@ -337,6 +337,12 @@ export default class ToDoEditable extends Component {
           this.id,
         );
         await deleteDoc(sbRef);
+        //delete firebase storage object
+        const fileRef = ref(
+          this.firebase.storage,
+          `audio/users/${this.auth.user.email}/${this.id}.webm`,
+        );
+        await deleteObject(fileRef);
       }
     });
   }

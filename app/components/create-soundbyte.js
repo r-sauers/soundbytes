@@ -31,6 +31,37 @@ export default class CreateSoundbyte extends Component {
     this.started = true;
   }
 
+  async concatBlobs(blobs) {
+    // return new Blob(blobs, { type: 'audio/webm' });
+    // Step 1: Extract raw binary data from all blobs
+    let totalLength = 0;
+    const dataBuffers = [];
+  
+    // Read each blob as an ArrayBuffer and extract data
+    for (let blob of blobs) {
+      const arrayBuffer = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.readAsArrayBuffer(blob);
+      });
+  
+      dataBuffers.push(new Uint8Array(arrayBuffer));  // Store data as Uint8Array for easy concatenation
+      totalLength += arrayBuffer.byteLength;
+    }
+  
+    // Step 2: Concatenate all data buffers into one large Uint8Array
+    const concatenatedArray = new Uint8Array(totalLength);
+    let offset = 0;
+    dataBuffers.forEach(buffer => {
+      concatenatedArray.set(buffer, offset);
+      offset += buffer.length;
+    });
+  
+    // Step 3: Create the combined Blob (if necessary, create a new header)
+    const newBlob = new Blob([concatenatedArray], { type: 'audio/webm' });
+    return newBlob;
+  }
+
   @action
   async commitSoundbyte() {
     if (!this.recorder || this.recordedChunks.length < 1) {
@@ -41,7 +72,9 @@ export default class CreateSoundbyte extends Component {
       //delete audio URL if present
       this.destroyAudioURL();
       //create a new audio blob from the array of audioblobs
-      const audioBlob = new Blob(this.recordedChunks, { type: 'audio/webm' });
+      // const audioBlob = new Blob(this.recordedChunks, { type: 'audio/webm' });
+      const audioBlob = await this.concatBlobs(this.recordedChunks);
+      console.log(audioBlob)
       this.recordedChunks = [];
       //update the storage, which makes our audio accessible by url
       const nextID = await this.getNextSoundbyteID(); //these can probably be implemented by a service since it will be a common function
