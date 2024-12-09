@@ -81,6 +81,7 @@
   },
   "dependencies": {
     "@ffmpeg/ffmpeg": "^0.12.10",
+    "assemblyai": "^4.8.0",
     "firebase": "^11.0.2"
   }
 }
