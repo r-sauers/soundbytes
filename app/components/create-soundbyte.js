@@ -14,6 +14,7 @@ export default class CreateSoundbyte extends Component {
 
   @tracked isRecording = false;
   @tracked started = false;
+  // @tracked cat = null;
 
   //array to store audio blob chunks. Blobs are immutable, otherwise would append them.
   recordedChunks = [];
@@ -60,6 +61,12 @@ export default class CreateSoundbyte extends Component {
         nextID.toString(),
       );
       const url = await getDownloadURL(fileRef);
+      var cat;
+      try {
+        cat = this.args.cat();
+      }catch (error){
+        cat = null;
+      }
       await setDoc(d, {
         timestamp: Date.now(),
         archived: false,
@@ -67,6 +74,7 @@ export default class CreateSoundbyte extends Component {
         description: null,
         name: null,
         date_archived: null,
+        category: cat,
       });
       //reset the recorder
       this.recorder = null;

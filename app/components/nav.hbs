@@ -15,7 +15,7 @@
           </li>
           {{#each this.projects as |project|}}
             <li class="nav-item">
-              <LinkTo @route="sounds" class="nav-link {{if (eq this.router.currentRouteName 'sounds') 'active'}}" aria-current="page">{{project.name}}</LinkTo>
+              <LinkTo @route="sounds_by_cat" @model={{project.name}} class="nav-link {{if (eq this.router.currentRouteName 'sounds') 'active'}}" aria-current="page">{{project.name}}</LinkTo>
             </li>
           {{/each}}
           <form class="d-flex mt-3" {{on 'submit' this.createProject}}>

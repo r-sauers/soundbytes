@@ -9,7 +9,7 @@
 </div>
 
 {{#if this.isCreateSoundbyteOpen}}
-  <CreateSoundbyte @close={{this.closeCreateSoundbyte}}/>
+  <CreateSoundbyte @cat={{this.getCat}} @close={{this.closeCreateSoundbyte}}/>
 {{else}} 
   <button type="button" {{on "click" this.openCreateSoundbyte}}>Add Soundbyte</button>
 {{/if}}

@@ -8,7 +8,8 @@ export default class SoundsController extends Controller {
   @tracked soundbytes = [];
   @tracked isCreateSoundbyteOpen = false;
   @tracked showPopup = false;
-
+  
+  @service router;
   @service auth;
   @service firebase;
 
@@ -18,11 +19,16 @@ export default class SoundsController extends Controller {
 
   constructor() {
     super(...arguments);
-
+    // this.router.refresh();
     this.addObserver('model', this, 'onModelChange');
   }
 
+  onModelInit(){
+    this.router.refresh();
+  }
+
   onModelChange() {
+    this.router.refresh();
     this.soundbytes = this.model;
     console.log("\\\\\\");
     console.log(this.cat);
@@ -35,7 +41,7 @@ export default class SoundsController extends Controller {
     const ref2 = query(
         ref,
         where('category', '==', this.cat),
-        orderBy('created', 'desc'),
+        orderBy('timestamp', 'desc'),
     );
     this.unsub = onSnapshot(ref2, (collection) => {
       const data = collection.docs.map((d) => {
@@ -66,5 +72,9 @@ export default class SoundsController extends Controller {
   };
   unpop = () => {
     this.showPopup = false;
+  };
+
+  getCat = () => {
+    return this.cat;
   };
 }
