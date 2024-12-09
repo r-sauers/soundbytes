@@ -5,6 +5,7 @@ import { service } from '@ember/service';
 
 export default class Nav extends Component {
   @service router;
+  @service auth;
 
   @tracked projects = [];
 
@@ -21,8 +22,9 @@ export default class Nav extends Component {
   }
 
   @action
-  logout() {
+  async logout() {
     this.router.transitionTo('splash');
+    await this.auth.sign_out();
   }
 
   @action

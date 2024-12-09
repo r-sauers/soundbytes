@@ -8,9 +8,7 @@ export default class SplashController extends Controller {
 
   @action
   async login() {
-    if (this.auth.loggedIn) {
-      await this.auth.sign_out();
-      this.router.transitionTo('splash');
-    } else await this.auth.sign_in_with_popup();
+    await this.auth.sign_in_with_popup();
+    this.router.transitionTo('sounds');
   }
 }

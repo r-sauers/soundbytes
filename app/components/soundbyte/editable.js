@@ -28,8 +28,17 @@ export default class ToDoEditable extends Component {
   @tracked offset = 0; //this might not be needed, need to look int wave api
   @tracked showMoreActions = false;
 
-  id;
+  @tracked editingName = false;
+  @tracked name = '';
+  @tracked editingDescription = false;
+  @tracked description = '';
 
+  isDestroyed = false;
+  id = undefined;
+  displayDate = '';
+
+  audioBlob = null;
+  audioExt = '';
   wavesurfer = null;
 
   constructor() {
@@ -37,7 +46,108 @@ export default class ToDoEditable extends Component {
     const sb = this.args.soundbyte;
     this.id = sb.id;
     this.archived = sb.archived;
-    this.audioURL = sb.url;
+    this.name = sb.name;
+    this.description = sb.description;
+    this.url = sb.url;
+    let date = new Date(sb.timestamp);
+    let hour = ((date.getHours() + 11) % 12) + 1;
+    let meridian = date.getHours() / 12 < 1 ? 'AM' : 'PM';
+    this.displayDate = `${date.toDateString()} ${hour}:${date.getMinutes()} ${meridian}`;
+  }
+
+  async initAudioBlob(url) {
+    const resp = await fetch(url);
+    this.audioBlob = await resp.blob();
+    this.audioExt = url.slice(url.lastIndexOf('.'), url.lastIndexOf('?'));
+  }
+
+  @action
+  async updateName(evt) {
+    let nameValue = '';
+    if (evt.type == 'focusout') {
+      nameValue = evt.target.value;
+    } else if (evt.type == 'submit') {
+      evt.preventDefault();
+      nameValue = evt.target['soundbyteName'].value;
+    }
+
+    const sbRef = doc(
+      this.firebase.db,
+      'users',
+      this.auth.user.email,
+      'soundbytes',
+      this.id,
+    );
+
+    try {
+      await updateDoc(sbRef, {
+        name: nameValue,
+      });
+
+      this.editingName = false;
+      this.name = nameValue;
+    } catch (err) {
+      console.log(err);
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: `We couldn't update the soundbyte name!`,
+      });
+      this.editingName = false;
+    }
+  }
+
+  @action
+  beginEditName() {
+    this.editingName = true;
+  }
+
+  @action
+  async updateDescription(evt) {
+    let description = '';
+    if (evt.type == 'focusout') {
+      description = evt.target.value;
+    } else if (evt.type == 'submit') {
+      evt.preventDefault();
+      description = evt.target['soundbyteDescription'].value;
+    } else if (evt.type == 'keypress') {
+      if (evt.key === 'Enter' && !evt.shiftKey) {
+        evt.preventDefault();
+        const newEvent = new Event('submit', { cancelable: true });
+        evt.target.form.dispatchEvent(newEvent);
+      }
+      return;
+    }
+
+    const sbRef = doc(
+      this.firebase.db,
+      'users',
+      this.auth.user.email,
+      'soundbytes',
+      this.id,
+    );
+
+    try {
+      await updateDoc(sbRef, {
+        description: description,
+      });
+
+      this.editingDescription = false;
+      this.description = description;
+    } catch (err) {
+      console.log(err);
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: `We couldn't update the soundbyte description!`,
+      });
+      this.editingDescription = false;
+    }
+  }
+
+  @action
+  beginEditDescription() {
+    this.editingDescription = true;
   }
 
   @action
@@ -45,18 +155,65 @@ export default class ToDoEditable extends Component {
     this.showMoreActions = !this.showMoreActions;
   }
 
+  /* https://stackoverflow.com/questions/3665115/how-to-create-a-file-in-memory-for-user-to-download-but-not-through-server */
+  download(blob, filename) {
+    var element = document.createElement('a');
+    element.setAttribute('href', URL.createObjectURL(blob));
+    element.setAttribute('download', filename);
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
+  }
+
+  @action
+  share() {
+    let name = this.name;
+    if (!name) {
+      name = 'soundbyte';
+    }
+    const audioFile = new File([this.audioBlob], name + this.audioExt, {
+      type: this.audioBlob.type,
+    });
+    if (navigator.canShare && navigator.canShare({ files: [audioFile] })) {
+      navigator
+        .share({
+          files: [audioFile],
+          title: 'Vacation Pictures',
+          text: 'Photos from September 27 to October 14.',
+        })
+        .then(() => console.log('Share was successful.'))
+        .catch((error) => console.log('Sharing failed', error));
+    } else {
+      console.log(`Your system doesn't support sharing files.`);
+      this.download(this.audioBlob, name + this.audioExt);
+    }
+  }
+
   @action
   initWaveSurfer() {
-    this.wavesurfer = WaveSurfer.create({
-      container: `#waveform-${this.id}`,
-      waveColor: 'violet',
-      progressColor: 'purple',
-      height: 100,
-      barWidth: 3,
-    });
-    this.wavesurfer.load(this.audioURL);
-    this.wavesurfer.on('finish', () => {
-      this.status = 'finished';
+    this.initAudioBlob(this.url).then(() => {
+      if (!this.wavesurfer) {
+        this.wavesurfer = WaveSurfer.create({
+          container: `#waveform-${this.id}`,
+          waveColor: 'violet',
+          progressColor: 'purple',
+          height: 100,
+          barWidth: 3,
+        });
+        const componentInstance = this;
+        this.wavesurfer.load(URL.createObjectURL(this.audioBlob)).then(() => {
+          if (componentInstance.isDestroyed) {
+            componentInstance.wavesurfer.destroy();
+          }
+        });
+        this.wavesurfer.on('finish', () => {
+          this.status = 'finished';
+        });
+      }
     });
   }
 
@@ -182,5 +339,10 @@ export default class ToDoEditable extends Component {
         await deleteDoc(sbRef);
       }
     });
+  }
+
+  willDestroy() {
+    super.willDestroy();
+    this.isDestroyed = true;
   }
 }

@@ -40,7 +40,7 @@ export default class CreateSoundbyte extends Component {
     } else {
       //delete audio URL if present
       this.destroyAudioURL();
-      //create a new audio blob from the array of audio chunks
+      //create a new audio blob from the array of audioblobs
       const audioBlob = new Blob(this.recordedChunks, { type: 'audio/webm' });
       this.recordedChunks = [];
       //update the storage, which makes our audio accessible by url
@@ -67,13 +67,10 @@ export default class CreateSoundbyte extends Component {
         description: null,
         name: null,
         date_archived: null,
-        category: 'test',
       });
       //reset the recorder
       this.recorder = null;
-      //refresh the page to show the new soundbyte
       this.close();
-      this.router.refresh();
     }
   }
 
@@ -112,106 +109,99 @@ export default class CreateSoundbyte extends Component {
     this.recordedChunks = [];
   }
 
-  //audio files are treated as just another recording. They can be used
-  //in conjunction with other user inputs and are sequenced according to  the input order
-  @action
-  async handleAudioFile(event) {
-    const file = event.target.files[0];
-    console.log(file.type);
-    if (file) {
-      //convert it to webm if mp3
-      if (file.type === 'audio/mpeg') {
-        // const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd'
-        const ffmpeg = new FFmpeg();
-        // console.log("hi")
-        // await ffmpeg.load({
-        //     coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
-        //     wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
-        // });
-        await ffmpeg.load();
-        console.log('hi2');
-        const fileData = await fetchFile(file);
-        console.log('hi3');
-        await ffmpeg.writeFile('input.mp3', fileData);
-        await ffmpeg.exec([
-          '-i',
-          'input.mp3',
-          '-c:a',
-          'libopus',
-          'output.webm',
-        ]);
-        const outputData = await ffmpeg.readFile('output.webm');
-        const audioBlob = new Blob([outputData.buffer], { type: 'audio/webm' });
-        this.recordedChunks.push(audioBlob);
-      } else if (file.type === 'audio/webm') {
-        const audioBlob = new Blob([file], { type: 'audio/webm' });
-        this.recordedChunks.push(audioBlob);
-      } else {
-        this.popup('Unsupported file type');
+    //audio files are treated as just another recording. They can be used
+    //in conjunction with other user inputs and are sequenced according to  the input order
+    @action
+    async handleAudioFile(event) {
+        const file = event.target.files[0];
+        console.log(file.type);
+        if (file) {
+            //convert it to webm if mp3
+            if (file.type === "audio/mpeg") {
+                // const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd'
+                const ffmpeg = new FFmpeg();
+                // console.log("hi")
+                // await ffmpeg.load({
+                //     coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
+                //     wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
+                // });
+                await ffmpeg.load();
+                console.log("hi2")
+                const fileData = await fetchFile(file);
+                console.log("hi3")
+                await ffmpeg.writeFile('input.mp3', fileData);
+                await ffmpeg.exec(['-i', 'input.mp3', '-c:a', 'libopus', 'output.webm']);
+                const outputData = await ffmpeg.readFile('output.webm');
+                const audioBlob = new Blob([outputData.buffer], { type: 'audio/webm' });
+                this.recordedChunks.push(audioBlob);
+            }
+            else if (file.type === "audio/webm" || file.type == 'video/webm') {
+                //convert the file into a blob, then push the blob
+                const audioBlob = new Blob([file], { type: 'audio/webm' });
+                this.recordedChunks.push(audioBlob);
+            }
+            else {
+                this.popup("Unsupported file type");
+            }
+            let inputElement = event.target;
+            inputElement.value = null;
+            console.log("chunks is ", this.recordedChunks.length, " parts long")
+        }
+        else {
+            this.popup("Try again");
+        }
+    }
+
+    //make this a toggle when you get everything else to work
+    @action
+    async playbackAudio() {
+        if (this.recordedChunks.length < 1) {
+            this.popup("Audio not provided");
+            return;
+        }
+        console.log(this.recordedChunks);
+        //if audioURL is set, no need to recreate a URL. just stream from it.
+        if (!this.audioURL) {
+            //combine chunks into a blob
+            const audioBlob = new Blob(this.recordedChunks, { type: 'audio/webm' });
+            //create a URL from Blob so to stream audio from
+            this.audioURL = URL.createObjectURL(audioBlob);
+        }
+        const audio = new Audio(this.audioURL);
+        if (!audio.canPlayType('audio/webm')) {
+            this.popup("Your browser doesn't support playing webm audio files");
+            return;
+        }
+        await audio.play(); //this is giving us issues
+    }
+
+    async createRecorder() {
+        //if the browser doesn't support recording
+        if (!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) {
+            this.popup("Your browser doesn't support audio recording");
+            return;
+        }
+        //create recorder
+        const stream = await navigator.mediaDevices.getUserMedia({audio: true})
+        this.recorder = new MediaRecorder(stream, {mimeType: 'audio/webm'}); //MediaRecorder only accepts webm types
+        //save recording data in our current audio chunk variable. This is called after this.recorder.stop() is called
+        this.recorder.ondataavailable = (event) => {
+            if (event.data.size > 0) {
+                this.recordedChunks.push(event.data);
+            }
+        }
+    }
+
+    async getNextSoundbyteID() {
+      const d = doc(this.firebase.db, 'users', this.auth.user.email, 'userData', 'soundbyteMetaData');
+      const docSnap = await getDoc(d);
+      //if todoMetaData exists, return nextID. If not, make nextID 0 and return it.
+      if (docSnap.exists()) {
+        return docSnap.data().nextID;
       }
-      let inputElement = event.target;
-      inputElement.value = null;
-      console.log('chunks is ', this.recordedChunks.size, ' parts long');
-    } else {
-      this.popup('Try again');
+      await setDoc(d, {nextID: 0});
+      return 0;
     }
-  }
-
-  //make this a toggle when you get everything else to work
-  @action
-  async playbackAudio() {
-    if (this.recordedChunks.length < 1) {
-      this.popup('Audio not provided');
-      return;
-    }
-    //if audioURL is set, no need to recreate a URL. just stream from it.
-    if (!this.audioURL) {
-      //combine chunks into a blob
-      const audioBlob = new Blob(this.recordedChunks, { type: 'audio/webm' });
-      //create a URL from Blob so to stream audio from
-      this.audioURL = URL.createObjectURL(audioBlob);
-    }
-    const audio = new Audio(this.audioURL);
-    if (!audio.canPlayType('audio/webm')) {
-      this.popup("Your browser doesn't support playing webm audio files");
-      return;
-    }
-    await audio.play(); //this is giving us issues
-  }
-
-  async createRecorder() {
-    //if the browser doesn't support recording
-    if (!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) {
-      this.popup("Your browser doesn't support audio recording");
-      return;
-    }
-    //create recorder
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    this.recorder = new MediaRecorder(stream, { mimeType: 'audio/webm' }); //MediaRecorder only accepts webm types
-    //save recording data in our current audio chunk variable. This is called after this.recorder.stop() is called
-    this.recorder.ondataavailable = (event) => {
-      if (event.data.size > 0) {
-        this.recordedChunks.push(event.data);
-      }
-    };
-  }
-
-  async getNextSoundbyteID() {
-    const d = doc(
-      this.firebase.db,
-      'users',
-      this.auth.user.email,
-      'userData',
-      'soundbyteMetaData',
-    );
-    const docSnap = await getDoc(d);
-    //if todoMetaData exists, return nextID. If not, make nextID 0 and return it.
-    if (docSnap.exists()) {
-      return docSnap.data().nextID;
-    }
-    await setDoc(d, { nextID: 0 });
-    return 0;
-  }
 
   async updateNextSoundbyteID() {
     const d = doc(

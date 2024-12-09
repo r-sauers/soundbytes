@@ -1,12 +1,19 @@
 {{page-title "Splash"}}
+{{#if this.auth.user}}
+<Nav/>
+{{/if}}
 <div class="header-container header-image">
   <h1 class="header-title display-1">Soundbytes</h1>
   <h2 class="header-subtitle display-6">Remember every sound</h2>
   <div class="header-actions m-2">
+    {{#if this.auth.user}}
+      <button type="button" class="btn btn-primary m-3" {{on 'click' this.auth.sign_out}}>Logout</button>
+    {{else}}
       <button type="button" class="btn btn-primary m-3" {{on 'click' this.login}}>Get Started</button>
-      <button type="button" class="btn btn-primary m-3" {{on 'click' this.login}}>Login</button>
+    {{/if}}
   </div>
 </div>
 <div class="tall">
   <p>Hello World</p>
+  <Soundbyte::NonEditable @welcome={{@model}}></Soundbyte::NonEditable>
 </div>
