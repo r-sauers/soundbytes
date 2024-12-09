@@ -30,8 +30,10 @@ export default class ToDoEditable extends Component {
   @tracked showMoreActions = false;
 
   @tracked editingName = false;
+  updatingName = false;
   @tracked name = '';
   @tracked editingDescription = false;
+  updatingDescription = false;
   @tracked description = '';
 
   isDestroyed = false;
@@ -65,6 +67,12 @@ export default class ToDoEditable extends Component {
 
   @action
   async updateName(evt) {
+    if (!this.editingName || this.updatingName) {
+      evt.preventDefault();
+      return;
+    }
+    this.updatingName = true;
+
     let nameValue = '';
     if (evt.type == 'focusout') {
       nameValue = evt.target.value;
@@ -97,6 +105,8 @@ export default class ToDoEditable extends Component {
       });
       this.editingName = false;
     }
+
+    this.updatingName = false;
   }
 
   @action
@@ -120,6 +130,12 @@ export default class ToDoEditable extends Component {
       }
       return;
     }
+
+    if (!this.editingDescription || this.updatingDescription) {
+      evt.preventDefault();
+      return;
+    }
+    this.updatingDescription = true;
 
     const sbRef = doc(
       this.firebase.db,
@@ -145,6 +161,8 @@ export default class ToDoEditable extends Component {
       });
       this.editingDescription = false;
     }
+
+    this.updatingDescription = false;
   }
 
   @action
