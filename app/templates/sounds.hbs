@@ -7,12 +7,13 @@
       <button type="button" class="btn btn-primary m-3">Record Sound</button>
   </div>
 </div>
-
-{{#if this.isCreateSoundbyteOpen}}
-  <CreateSoundbyte @close={{this.closeCreateSoundbyte}}/>
-{{else}} 
-  <button type="button" {{on "click" this.openCreateSoundbyte}}>Add Soundbyte</button>
-{{/if}}
+<div style="display: flex; flex-direction: row; justify-content: center;">
+  {{#if this.isCreateSoundbyteOpen}}
+    <CreateSoundbyte @close={{this.closeCreateSoundbyte}}/>
+  {{else}} 
+      <button type="button" class="btn btn-primary" style="background-color: purple; margin: 1em;" {{on "click" this.openCreateSoundbyte}}>Add Soundbyte</button>
+  {{/if}}
+</div>
 
 <div class="container">
   {{#each this.soundbytes as |soundbyte|}}

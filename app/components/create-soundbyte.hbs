@@ -1,21 +1,17 @@
-<div id="create-soundbyte" style="border-style: solid; margin: 1em; padding: 1em;">
-
-    <button id="close" type="button" {{on "click" this.close}}>X</button>
-    <p>Create a New Soundbyte</p>
-
-    {{#if this.started}}
-        <button id="recordBtn" type="button" {{on "click" this.toggleRecording}}>
-            {{#if this.isRecording}}
-                ❚❚
-            {{else}}
-                ▶
-            {{/if}}
-        </button>
-        <button id="playbackNewAudioBtn" {{on "click" this.playbackAudio}}>Playback</button>
-        <button id="resetAudioBtn" {{on "click" this.resetRecorder}}>↺</button>
-        <button id="commitRecording" {{on "click" this.commitSoundbyte}}>Submit</button>
-        <input type="file" accept="audio/webm, audio/mp3" onchange={{this.handleAudioFile}}/>   
-    {{else}}
-        <button id="start-create" type="button" {{on "click" this.start}}>+</button>
-    {{/if}}
+<div id="create-soundbyte" style="border-style: solid; margin: 1em; display: inline-block; border-width: 1px; border-color: purple;">
+    <button id="close" type="button" style="background-color: red; color: white; border-style: none;" {{on "click" this.close}}>X</button>
+    <div style="margin: 0.5em; font-size: 1.5em;">
+        <div><b>Create a New Soundbyte</b></div>
+        <div style="display: flex; justify-content: space-between; flex-direction: row;">
+            <button id="playbackNewAudioBtn" {{on "click" this.playbackAudio}} style="color: purple; background-color: white; border-style: none;" class="bi bi-plus-circle"></button>
+            <button id="resetAudioBtn" {{on "click" this.resetRecorder}} style="color: purple; background-color: white; border-style: none;" class="bi bi-trash"></button>
+        </div>
+        <div style="display: flex; justify-content: center;">
+            <button id="recordBtn" type="button"  style="color: purple; background-color: white; border-style: none;" class="{{if this.isRecording 'bi bi-pause-fill' 'bi bi-play-fill'}}" {{on "click" this.toggleRecording}}></button>
+        </div>
+        <div style="display: flex; justify-content: space-between; flex-direction: row; font-size: 0.5em;">
+            <input type="file" accept="audio/webm, audio/mp3" onchange={{this.handleAudioFile}}/>
+            <button id="commitRecording" {{on "click" this.commitSoundbyte}} style="color: purple; background-color: white; border-style: none;" class="bi bi-cloud-plus"></button>
+        </div>
+    </div>
 </div>

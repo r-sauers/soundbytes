@@ -40,7 +40,7 @@ export default class CreateSoundbyte extends Component {
     } else {
       //delete audio URL if present
       this.destroyAudioURL();
-      //create a new audio blob from the array of audio chunks
+      //create a new audio blob from the array of audioblobs
       const audioBlob = new Blob(this.recordedChunks, { type: 'audio/webm' });
       this.recordedChunks = [];
       //update the storage, which makes our audio accessible by url
@@ -135,7 +135,8 @@ export default class CreateSoundbyte extends Component {
                 const audioBlob = new Blob([outputData.buffer], { type: 'audio/webm' });
                 this.recordedChunks.push(audioBlob);
             }
-            else if (file.type === "audio/webm") {
+            else if (file.type === "audio/webm" || file.type == 'video/webm') {
+                //convert the file into a blob, then push the blob
                 const audioBlob = new Blob([file], { type: 'audio/webm' });
                 this.recordedChunks.push(audioBlob);
             }
@@ -144,7 +145,7 @@ export default class CreateSoundbyte extends Component {
             }
             let inputElement = event.target;
             inputElement.value = null;
-            console.log("chunks is ", this.recordedChunks.size, " parts long")
+            console.log("chunks is ", this.recordedChunks.length, " parts long")
         }
         else {
             this.popup("Try again");
@@ -158,6 +159,7 @@ export default class CreateSoundbyte extends Component {
             this.popup("Audio not provided");
             return;
         }
+        console.log(this.recordedChunks);
         //if audioURL is set, no need to recreate a URL. just stream from it.
         if (!this.audioURL) {
             //combine chunks into a blob
