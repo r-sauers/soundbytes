@@ -14,8 +14,8 @@ export default class VolumeService extends Service {
   setVolume(value) {
     this.volume = value;
 
-    for (const listener in this.listeners) {
-      listener(value);
+    for (const id in this.listeners) {
+      this.listeners[id](value);
     }
   }
   getVolume() {
@@ -29,22 +29,6 @@ export default class VolumeService extends Service {
     return () => {
       volumeServiceInstance._removeListener(id);
     };
-  }
-  addWaveSurferListener(wavesurfer) {
-    wavesurfer.setVolume(this.volume);
-    const removeListener = this.onVolumeChange((volume) => {
-      wavesurfer.setVolume(volume);
-    });
-    wavesurfer.on(
-      'destroy',
-      () => {
-        removeListener();
-      },
-      {
-        once: true,
-      },
-    );
-    return removeListener;
   }
   _removeListener(id) {
     delete this.listeners[id];

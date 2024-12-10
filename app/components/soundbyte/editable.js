@@ -42,7 +42,7 @@ export default class ToDoEditable extends Component {
 
   audioBlob = null;
   audioExt = '';
-  wavesurfer = null;
+  @tracked wavesurfer = null;
 
   constructor() {
     super(...arguments);
