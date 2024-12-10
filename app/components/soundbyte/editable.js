@@ -15,12 +15,13 @@ import {
   deleteDoc,
   getDoc,
 } from 'firebase/firestore';
-import { deleteObject, ref } from 'firebase/storage';
+import { deleteObject, getBlob, ref } from 'firebase/storage';
 
 export default class ToDoEditable extends Component {
   @service firebase;
   @service auth;
   @service router;
+  @service textToSpeech;
 
   @tracked archived = undefined;
   @tracked volume = 0.5; //I think we could have a service to increase/decrease volume and play/pause, so we could save volume across sounds?
@@ -29,8 +30,10 @@ export default class ToDoEditable extends Component {
   @tracked showMoreActions = false;
 
   @tracked editingName = false;
+  updatingName = false;
   @tracked name = '';
   @tracked editingDescription = false;
+  updatingDescription = false;
   @tracked description = '';
 
   isDestroyed = false;
@@ -39,7 +42,7 @@ export default class ToDoEditable extends Component {
 
   audioBlob = null;
   audioExt = '';
-  wavesurfer = null;
+  @tracked wavesurfer = null;
 
   constructor() {
     super(...arguments);
@@ -49,6 +52,7 @@ export default class ToDoEditable extends Component {
     this.name = sb.name;
     this.description = sb.description;
     this.url = sb.url;
+    this.transcribed = sb.transcribed;
     let date = new Date(sb.timestamp);
     let hour = ((date.getHours() + 11) % 12) + 1;
     let meridian = date.getHours() / 12 < 1 ? 'AM' : 'PM';
@@ -63,6 +67,12 @@ export default class ToDoEditable extends Component {
 
   @action
   async updateName(evt) {
+    if (!this.editingName || this.updatingName) {
+      evt.preventDefault();
+      return;
+    }
+    this.updatingName = true;
+
     let nameValue = '';
     if (evt.type == 'focusout') {
       nameValue = evt.target.value;
@@ -95,6 +105,8 @@ export default class ToDoEditable extends Component {
       });
       this.editingName = false;
     }
+
+    this.updatingName = false;
   }
 
   @action
@@ -118,6 +130,12 @@ export default class ToDoEditable extends Component {
       }
       return;
     }
+
+    if (!this.editingDescription || this.updatingDescription) {
+      evt.preventDefault();
+      return;
+    }
+    this.updatingDescription = true;
 
     const sbRef = doc(
       this.firebase.db,
@@ -143,6 +161,8 @@ export default class ToDoEditable extends Component {
       });
       this.editingDescription = false;
     }
+
+    this.updatingDescription = false;
   }
 
   @action
@@ -310,7 +330,8 @@ export default class ToDoEditable extends Component {
       this.showMoreActions = false;
     } else if (
       clickedName != 'delete-soundbyte' &&
-      clickedName != 'move-soundbyte'
+      clickedName != 'move-soundbyte' &&
+      clickedName != 'transcribe-soundbyte'
     ) {
       this.showMoreActions = false;
     }
@@ -345,6 +366,85 @@ export default class ToDoEditable extends Component {
         await deleteObject(fileRef);
       }
     });
+  }
+
+  @action
+  async move() {
+    this.showMoreActions = false;
+    const projects = {
+      none: `No Project`,
+      test: `Test Project`,
+    };
+    const currentProject = `No Project`;
+
+    Swal.fire({
+      title: `Select Project`,
+      html: `<i>Hint: Add more projects in the navigation sidebar!</i>`,
+      input: `select`,
+      inputOptions: projects,
+      inputValue: currentProject,
+      showCancelButton: true,
+      preConfirm: async (project) => {
+        Swal.showValidationMessage('Not Implemented!');
+        return false;
+        Swal.resetValidationMessage();
+        try {
+          await this.auth.ensureInitialized();
+          const sbRef = doc(
+            this.firebase.db,
+            'users',
+            this.auth.user.email,
+            'soundbytes',
+            this.id,
+          );
+          await updateDoc(sbRef, {});
+        } catch (err) {
+          Swal.showValidationMessage('Something went wrong!');
+          return false;
+        }
+      },
+    });
+  }
+
+  @action
+  async transcribe() {
+    this.showMoreActions = false;
+    Swal.fire({
+      title: 'Speech To Text',
+      html: `<div class="spinner-border text-primary" role="status">
+  <span class="visually-hidden">Loading...</span>
+</div>`,
+    });
+    const htmlEl = Swal.getHtmlContainer();
+
+    try {
+      if (!this.transcribed) {
+        this.transcribed = await this.textToSpeech.transcribe(
+          this.url,
+          this.audioBlob,
+        );
+
+        try {
+          await this.auth.ensureInitialized();
+          const sbRef = doc(
+            this.firebase.db,
+            'users',
+            this.auth.user.email,
+            'soundbytes',
+            this.id,
+          );
+          await updateDoc(sbRef, {
+            transcribed: this.transcribed,
+          });
+        } catch (err) {
+          console.log(err);
+        }
+      }
+      htmlEl.innerHTML = this.transcribed;
+    } catch (err) {
+      console.log(err);
+      htmlEl.innerHTML = `<span class="text-danger">${err}</span>`;
+    }
   }
 
   willDestroy() {

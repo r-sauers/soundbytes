@@ -4,12 +4,19 @@
       <div class="position-absolute bg-light z-3 px-3 py-1 border rounded mt-4 div-grow-right {{unless this.showMoreActions "visually-hidden"}}">
         <ul class="navbar-nav flex-grow-1 bg-light">
           <li class="nav-item border-bottom">
+            <button type="button" name="transcribe-soundbyte"
+              class="nav-link text-center w-100"
+              {{on 'click' this.transcribe}}>Transcribe</button>
+          </li>
+          <li class="nav-item border-bottom">
+            <button type="button" name="move-soundbyte"
+              class="nav-link text-center w-100"
+              {{on 'click' this.move}}>Move</button>
+          </li>
+          <li class="nav-item">
             <button type="button" name="delete-soundbyte"
               class="nav-link text-center w-100"
               {{on 'click' this.delete}}>Delete</button>
-          </li>
-          <li class="nav-item">
-            <button type="button" name="move-soundbyte" class="nav-link text-center w-100">Move</button>
           </li>
         </ul>
       </div>
@@ -64,6 +71,7 @@
             <button type="button" class="btn btn-primary btn-sm rounded-circle" {{on 'click' this.skipForward}}><i class="bi bi-fast-forward-fill"></i></button>
           </div>
           <div>
+            <VolumeAdjuster @wavesurfer={{this.wavesurfer}}/>
           </div>
         </div>
       </div>
@@ -89,3 +97,30 @@
     </div>
   </div>
 </div>
+
+<template id="test-template" shadowrootmode="open">
+  <h1>Hello World</h1>
+</template>
+
+<template id="my-template">
+  <swal-title>
+    Save changes to "Untitled 1" before closing?
+  </swal-title>
+  <swal-icon type="warning" color="red"></swal-icon>
+  <swal-button type="confirm">
+    Save As
+  </swal-button>
+  <swal-button type="cancel">
+    Cancel
+  </swal-button>
+  <swal-button type="deny">
+    Close without Saving
+  </swal-button>
+  <swal-param name="allowEscapeKey" value="false" />
+  <swal-param
+    name="customClass"
+    value='{ "popup": "my-popup" }' />
+  <swal-function-param
+    name="didOpen"
+    value="popup => console.log(popup)" />
+</template>

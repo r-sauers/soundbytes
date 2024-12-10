@@ -1,0 +1,33 @@
+{{#if this.adjustingVolume}}
+  <div class="vertical-range-container border bg-white">
+    <input
+      type="range"
+      aria-label="volume"
+      name="volume"
+      class="vertical-range form-range"
+      min="0"
+      max="1"
+      step="0.1"
+      value={{this.rangeValue}}
+      {{autofocus}}
+      {{on "focusout" this.endAdjustingVolume}}
+      {{on "input" this.adjustVolume}}
+    />
+  </div>
+{{/if}}
+<button
+  type="button"
+  name="open-volume"
+  class="btn btn-sm btn-primary rounded-circle"
+  {{on "click" this.toggleAdjustingVolume}}
+  {{get-element this.setButton}}
+>
+  {{#if (compare this.rangeValue '<=' 0) }}
+    <i class="bi bi-volume-mute-fill"></i>
+  {{else if (compare this.rangeValue '<' 0.5) }}
+    <i class="bi bi-volume-down-fill"></i>
+  {{else}}
+    <i class="bi bi-volume-up-fill"></i>
+  {{/if}}
+</button>
+<div {{once-insert this.initWavesurfer}}></div>
