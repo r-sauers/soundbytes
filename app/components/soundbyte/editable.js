@@ -39,6 +39,7 @@ export default class ToDoEditable extends Component {
   isDestroyed = false;
   id = undefined;
   displayDate = '';
+  cat = undefined;
 
   audioBlob = null;
   audioExt = '';
@@ -50,6 +51,7 @@ export default class ToDoEditable extends Component {
     this.id = sb.id;
     this.archived = sb.archived;
     this.name = sb.name;
+    this.cat = sb.category;
     this.description = sb.description;
     this.url = sb.url;
     this.transcribed = sb.transcribed;
@@ -370,23 +372,42 @@ export default class ToDoEditable extends Component {
 
   @action
   async move() {
+    var projectsInc;
     this.showMoreActions = false;
-    const projects = {
-      none: `No Project`,
-      test: `Test Project`,
-    };
-    const currentProject = `No Project`;
+    const ref = doc(
+      this.firebase.db,
+      'users',
+      this.auth.user.email,
+      'userData',
+      'soundbyteMetaData',
+    );
+
+    await getDoc(ref).then((docSnap) => {
+      console.log(docSnap);
+      projectsInc = docSnap.data();//.categories;
+    })
+
+    var projects2 = {temp: 'No Category'};
+    for(var i = 0; i < projectsInc.categories.length; i++){
+      projects2[projectsInc.categories[i].name] = projectsInc.categories[i].name;
+    }
+
+    // const currentProject = `No Project`;
+    const currentProject = this.cat;
 
     Swal.fire({
       title: `Select Project`,
       html: `<i>Hint: Add more projects in the navigation sidebar!</i>`,
       input: `select`,
-      inputOptions: projects,
+      inputOptions: projects2,
       inputValue: currentProject,
       showCancelButton: true,
       preConfirm: async (project) => {
-        Swal.showValidationMessage('Not Implemented!');
-        return false;
+        // Swal.showValidationMessage('Not Implemented!');
+        // return false;
+        if(project == 'temp'){
+          project = null;
+        }
         Swal.resetValidationMessage();
         try {
           await this.auth.ensureInitialized();
@@ -397,7 +418,7 @@ export default class ToDoEditable extends Component {
             'soundbytes',
             this.id,
           );
-          await updateDoc(sbRef, {});
+          await updateDoc(sbRef, {category : project});
         } catch (err) {
           Swal.showValidationMessage('Something went wrong!');
           return false;

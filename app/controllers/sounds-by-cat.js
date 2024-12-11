@@ -24,13 +24,14 @@ export default class SoundsController extends Controller {
   }
 
   onModelInit(){
-    this.router.refresh();
+    // this.router.refresh();
+    // console.log("INit");
   }
 
   onModelChange() {
-    this.router.refresh();
+    // this.router.refresh();
     this.soundbytes = this.model;
-    console.log("\\\\\\");
+    console.log("\\\\\\??!?!?!?");
     console.log(this.cat);
     const ref = collection(
       this.firebase.db,

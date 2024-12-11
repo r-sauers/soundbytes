@@ -4,10 +4,10 @@
   <h1 class="header-title display-1">My Soundbytes</h1>
   <h2 class="header-subtitle display-6">Listen and add sounds.</h2>
   <div class="header-actions m-2">
-      <button type="button" class="btn btn-primary m-3">Record Sound</button>
+      <button type="button" class="btn btn-primary m-3" onclick="location.href='#record'">Record Sound</button>
   </div>
 </div>
-<div style="display: flex; flex-direction: row; justify-content: center;">
+<div id='record' style="display: flex; flex-direction: row; justify-content: center;">
   {{#if this.isCreateSoundbyteOpen}}
     <CreateSoundbyte @close={{this.closeCreateSoundbyte}}/>
   {{else}}

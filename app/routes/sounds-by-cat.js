@@ -24,6 +24,7 @@ export default class SoundsByCatRoute extends Route {
   }
 
   async model(params) {
+    this.soundbytes = []
     console.log(params)
     this.cat = params.cat;
     const ref = collection(
@@ -50,6 +51,7 @@ export default class SoundsByCatRoute extends Route {
   }
 
   setupController(controller, model){
+    console.log("controller reset");
     super.setupController(controller, model);
     controller.set('cat', this.cat);
   }
