@@ -156,41 +156,15 @@ export default class CreateSoundbyte extends Component {
     async handleAudioFile(event) {
         const file = event.target.files[0];
         console.log(file.type);
-        if (file) {
-            //convert it to webm if mp3
-            if (file.type === "audio/mpeg") {
-                // const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd'
-                const ffmpeg = new FFmpeg();
-                // console.log("hi")
-                // await ffmpeg.load({
-                //     coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
-                //     wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
-                // });
-                await ffmpeg.load();
-                console.log("hi2")
-                const fileData = await fetchFile(file);
-                console.log("hi3")
-                await ffmpeg.writeFile('input.mp3', fileData);
-                await ffmpeg.exec(['-i', 'input.mp3', '-c:a', 'libopus', 'output.webm']);
-                const outputData = await ffmpeg.readFile('output.webm');
-                const audioBlob = new Blob([outputData.buffer], { type: 'audio/webm' });
-                this.recordedChunks.push(audioBlob);
-            }
-            else if (file.type === "audio/webm" || file.type == 'video/webm') {
-                //convert the file into a blob, then push the blob
-                const audioBlob = new Blob([file], { type: 'audio/webm' });
-                this.recordedChunks.push(audioBlob);
-            }
-            else {
-                this.popup("Unsupported file type");
-            }
-            let inputElement = event.target;
-            inputElement.value = null;
-            console.log("chunks is ", this.recordedChunks.length, " parts long")
+        if (file && file.type == "audio/webm" || file.type == 'video/webm') {
+            //convert the file into a blob, then push the blob
+            const audioBlob = new Blob([file], { type: 'audio/webm' });
+            this.recordedChunks.push(audioBlob);
+        } else {
+            this.popup("Unsupported file type");
         }
-        else {
-            this.popup("Try again");
-        }
+        let inputElement = event.target;
+        inputElement.value = null;
     }
 
     //make this a toggle when you get everything else to work
