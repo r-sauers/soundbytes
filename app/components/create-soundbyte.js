@@ -68,14 +68,14 @@ export default class CreateSoundbyte extends Component {
     if (!this.recorder || this.recordedChunks.length < 1) {
       this.popup('Upload a sound before you commit');
     } else if (this.recorder.state !== 'inactive') {
-      this.popup('Stop recording before you commit');
+        this.recorder.pause();
+        this.isRecoring = false;
     } else {
       //delete audio URL if present
       this.destroyAudioURL();
       //create a new audio blob from the array of audioblobs
       // const audioBlob = new Blob(this.recordedChunks, { type: 'audio/webm' });
       const audioBlob = await this.concatBlobs(this.recordedChunks);
-      console.log(audioBlob)
       this.recordedChunks = [];
       //update the storage, which makes our audio accessible by url
       const nextID = await this.getNextSoundbyteID(); //these can probably be implemented by a service since it will be a common function
@@ -124,6 +124,7 @@ export default class CreateSoundbyte extends Component {
       } else {
         //if we try to stop recorder before it exists. This shouldn't technically happen
         this.popup('Something went wrong. Please try again later');
+        return;
       }
     } else {
       //start recording. We have to create a new recorder every time we record new audio
@@ -135,6 +136,7 @@ export default class CreateSoundbyte extends Component {
       } else {
         //if we try to start recorder before it exists. This shouldn't technically happen
         this.popup('something went wrong. Please try again later');
+        return;
       }
     }
     this.isRecording = !this.isRecording;
@@ -144,7 +146,8 @@ export default class CreateSoundbyte extends Component {
   @action
   resetRecorder() {
     if (this.recorder && this.recorder.state == 'recording') {
-      this.recorder.stop();
+      this.recorder.pause();
+      this.isRecoring = false;
     }
     this.destroyAudioURL();
     this.recordedChunks = [];
@@ -174,7 +177,10 @@ export default class CreateSoundbyte extends Component {
             this.popup("Audio not provided");
             return;
         }
-        console.log(this.recordedChunks);
+        if (this.recorder && this.recorder.state == 'recording') {
+          this.recorder.pause();
+          this.isRecoring = false;
+        }
         //if audioURL is set, no need to recreate a URL. just stream from it.
         if (!this.audioURL) {
             //combine chunks into a blob
@@ -237,8 +243,11 @@ export default class CreateSoundbyte extends Component {
   }
 
   popup(message) {
-    // this.args.popup(message);
-    alert(message);
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: message,
+    });
   }
 
   // Clean up the URL when component is destroyed for any reason (like on route change)
