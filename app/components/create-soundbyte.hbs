@@ -10,7 +10,7 @@
             <button id="recordBtn" type="button"  style="color: purple; background-color: white; border-style: none;" class="{{if this.isRecording 'bi bi-pause-fill' 'bi bi-play-fill'}}" {{on "click" this.toggleRecording}}></button>
         </div>
         <div style="display: flex; justify-content: space-between; flex-direction: row; align-items: center;">
-            <input type="file" style="font-size: 0.5em;" accept="audio/webm, audio/mp3" onchange={{this.handleAudioFile}}/>
+            <input type="file" style="font-size: 0.5em;" accept="audio/webm" onchange={{this.handleAudioFile}}/>
             <button id="commitRecording" {{on "click" this.commitSoundbyte}} style="color: purple; background-color: white; border-style: none;" class="bi bi-cloud-plus"></button>
         </div>
     </div>

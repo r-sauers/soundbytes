@@ -291,7 +291,7 @@ export default class ToDoEditable extends Component {
 
   @action
   restartPlayback() {
-    this.wavesurfer.setTime(0);
+    this.wavesurfer.loadBlob(this.audioBlob); //needed bc wavesurfer seekTo(0) isn't working
     this.wafesurfer.play();
     this.status = 'playing';
   }
@@ -318,7 +318,7 @@ export default class ToDoEditable extends Component {
       this.status = 'paused';
     } else {
       if (this.status == 'finished') {
-        this.wavesurfer.setTime(0);
+        this.wavesurfer.loadBlob(this.audioBlob); //needed bc wavesurfer seekTo(0) isn't working
       }
       this.wavesurfer.play();
       this.status = 'playing';
