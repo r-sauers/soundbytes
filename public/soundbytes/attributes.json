@@ -1,0 +1,25 @@
+
+{   
+    "welcome": {
+        "url": "/soundbytes/audio/welcome.webm",
+        "name": "welcome",
+        "description": "Welcome to soundbytes!",
+        "id": 0,
+        "category": "public"
+    },
+    "melody": {
+        "url": "/soundbytes/audio/melody.webm",
+        "name": "melody",
+        "description": "Record melodies",
+        "id": 1,
+        "category": "public"
+    },
+    "joke": {
+        "url": "/soundbytes/audio/joke.webm",
+        "name": "joke",
+        "description": "Record jokes",
+        "id": 2,
+        "category": "public"
+    }
+
+}

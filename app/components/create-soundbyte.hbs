@@ -1,15 +1,15 @@
-<div id="create-soundbyte" style="border-style: solid; margin: 1em; display: inline-block; border-width: 1px; border-color: purple;">
-    <button id="close" type="button" style="background-color: red; color: white; border-style: none;" {{on "click" this.close}}>X</button>
-    <div style="margin: 0.5em; font-size: 1.5em;">
+<div id="create-soundbyte" class="create-soundbyte-container-container">
+    <button id="close" type="button" class="exit-button" {{on "click" this.close}}>X</button>
+    <div class="create-soundbyte-container">
         <div><b>Create a New Soundbyte</b></div>
-        <div style="display: flex; justify-content: space-between; flex-direction: row;">
+        <div class="create-soundbyte-between">
             <button id="playbackNewAudioBtn" {{on "click" this.playbackAudio}} style="color: purple; background-color: white; border-style: none;" class="bi bi-soundwave"></button>
             <button id="resetAudioBtn" {{on "click" this.resetRecorder}} style="color: purple; background-color: white; border-style: none;" class="bi bi-trash"></button>
         </div>
         <div style="display: flex; justify-content: center;">
             <button id="recordBtn" type="button"  style="color: purple; background-color: white; border-style: none;" class="{{if this.isRecording 'bi bi-pause-fill' 'bi bi-play-fill'}}" {{on "click" this.toggleRecording}}></button>
         </div>
-        <div style="display: flex; justify-content: space-between; flex-direction: row; align-items: center;">
+        <div class="create-soundbyte-between">
             <input type="file" style="font-size: 0.5em;" accept="audio/webm" onchange={{this.handleAudioFile}}/>
             <button id="commitRecording" {{on "click" this.commitSoundbyte}} style="color: purple; background-color: white; border-style: none;" class="bi bi-cloud-plus"></button>
         </div>

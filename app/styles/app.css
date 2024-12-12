@@ -152,3 +152,28 @@
   width: revert;
   height: revert;
 }
+
+.create-soundbyte-container-container {
+  border-style: solid;
+  margin: 1em;
+  display: inline-block;
+  border-width: 1px;
+  border-color: purple;
+}
+
+.exit-button {
+  background-color: red;
+  color: white;
+  border-style: none;
+}
+
+.create-soundbyte-container {
+  margin: 0.5em;
+  font-size: 1.5em;
+}
+.create-soundbyte-between {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  align-items: center;
+}

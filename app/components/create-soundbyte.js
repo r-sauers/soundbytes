@@ -100,14 +100,15 @@ export default class CreateSoundbyte extends Component {
       }catch (error){
         cat = null;
       }
+      
       await setDoc(d, {
         timestamp: Date.now(),
-        archived: false,
         url: url,
         description: null,
         name: null,
         date_archived: null,
         category: cat,
+        transcribed: null,
       });
       //reset the recorder
       this.recorder = null;

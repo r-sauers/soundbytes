@@ -30,9 +30,9 @@ export default class ToDoEditable extends Component {
 
   constructor() {
     super(...arguments);
-    const welcome = this.args.welcome;
-    this.id = welcome.id;
-    this.audioURL = welcome.url;
+    const soundbyte = this.args.soundbyte;
+    this.id = soundbyte.id;
+    this.audioURL = soundbyte.url;
   }
 
   @action
