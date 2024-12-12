@@ -109,6 +109,7 @@ export default class CreateSoundbyte extends Component {
         date_archived: null,
         category: cat,
         transcribed: null,
+        archived: false
       });
       //reset the recorder
       this.recorder = null;
