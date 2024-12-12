@@ -1,13 +1,13 @@
 /* Ember supports plain CSS out of the box. More info: https://cli.emberjs.com/release/advanced-use/stylesheets/ */
 :root {
-  --header-height: 60vh;
+  --header-height: 40vh;
   --header-height-tall: 90vh;
   --header-image-url: url("/soundwave.jpg");
 }
 
 @media (aspect-ratio <= 8/5) {
   :root {
-    --header-height: 40vh;
+    --header-height: 30vh;
     --header-height-tall: 50vh;
   }
 }
