@@ -8,13 +8,13 @@ export default class SoundsController extends Controller {
   @tracked soundbytes = [];
   @tracked isCreateSoundbyteOpen = false;
   @tracked showPopup = false;
-  
+
   @service router;
   @service auth;
   @service firebase;
 
-  @tracked cat = "temp";
-  
+  @tracked cat = 'temp';
+
   unsub = null;
 
   constructor() {
@@ -23,16 +23,9 @@ export default class SoundsController extends Controller {
     this.addObserver('model', this, 'onModelChange');
   }
 
-  onModelInit(){
-    // this.router.refresh();
-    // console.log("INit");
-  }
-
   onModelChange() {
-    // this.router.refresh();
-    this.soundbytes = this.model;
-    console.log("\\\\\\??!?!?!?");
-    console.log(this.cat);
+    this.soundbytes = this.model.soundbytes;
+
     const ref = collection(
       this.firebase.db,
       'users',
@@ -40,9 +33,9 @@ export default class SoundsController extends Controller {
       'soundbytes',
     );
     const ref2 = query(
-        ref,
-        where('category', '==', this.cat),
-        orderBy('timestamp', 'desc'),
+      ref,
+      where('category', '==', this.cat),
+      orderBy('timestamp', 'desc'),
     );
     this.unsub = onSnapshot(ref2, (collection) => {
       const data = collection.docs.map((d) => {
@@ -52,8 +45,6 @@ export default class SoundsController extends Controller {
         };
       });
 
-      console.log(data);
-      console.log('^');
       this.soundbytes = data;
     });
   }

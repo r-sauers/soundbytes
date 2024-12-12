@@ -24,8 +24,7 @@ export default class SoundsByCatRoute extends Route {
   }
 
   async model(params) {
-    this.soundbytes = []
-    console.log(params)
+    this.soundbytes = [];
     this.cat = params.cat;
     const ref = collection(
       this.firebase.db,
@@ -44,10 +43,11 @@ export default class SoundsByCatRoute extends Route {
       dat['id'] = doc.id;
       this.soundbytes.push(dat);
     });
-    console.log("-------");
-    console.log(this.soudbytes);
-    
-    return this.soundbytes;
+
+    return {
+      soundbytes: this.soundbytes,
+      category: this.cat,
+    };
   }
 
   setupController(controller, model){

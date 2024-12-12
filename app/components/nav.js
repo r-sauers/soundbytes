@@ -14,6 +14,8 @@ export default class Nav extends Component {
   constructor() {
     super(...arguments);
 
+    this.projects = [];
+
     const ref = doc(
       this.firebase.db,
       'users',
@@ -24,14 +26,9 @@ export default class Nav extends Component {
 
     getDoc(ref).then((docSnap) => {
       console.log(docSnap);
-      this.projects = docSnap.data().categories;
-    })
+      this.projects = docSnap.data().categories || [];
+    });
 
-    // this.projects = [
-    //   {
-    //     name: 'test',
-    //   },
-    // ];
     this.router.on('routeWillChange', (transition) => {
       document.body.style.overflowY = 'scroll';
     });
