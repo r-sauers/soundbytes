@@ -25,7 +25,7 @@ export default class Nav extends Component {
     );
 
     getDoc(ref).then((docSnap) => {
-      console.log(docSnap);
+      console.log(docSnap.data());
       this.projects = docSnap.data().categories || [];
     });
 

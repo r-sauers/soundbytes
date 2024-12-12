@@ -1,7 +1,15 @@
 /* Ember supports plain CSS out of the box. More info: https://cli.emberjs.com/release/advanced-use/stylesheets/ */
 :root {
-  --header-height: 30vh;
-  --min-header-height: 300px;
+  --header-height: 60vh;
+  --header-height-tall: 90vh;
+  --header-image-url: url("/soundwave.jpg");
+}
+
+@media (aspect-ratio <= 8/5) {
+  :root {
+    --header-height: 40vh;
+    --header-height-tall: 50vh;
+  }
 }
 
 .navbar {
@@ -30,10 +38,22 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  z-index: 2;
+  height: var(--header-height)
 }
 
+.header-container.tall {
+  height: var(--header-height-tall);
+}
+
+.bg-img-1 {
+  --header-image-url: url("/soundwave.jpg");
+}
+
+/*
 @media (aspect-ratio >= 8/5) {
+  .header-image-tall {
+
+  }
   .header-image::before {
     background-size: 100% 90vh;
     background-position: top center;
@@ -55,7 +75,7 @@
   .header-container {
     height: 40vh;
   }
-}
+}*/
 
 .header-image::before {
   content: "";
@@ -65,11 +85,19 @@
   top: 0;
   left: 0;
   background-color: black;
-  background-image: url("/soundwave.jpg");
   background-repeat: no-repeat;
   background-attachment: fixed;
   filter: brightness(30%);
   z-index: -1;
+  background-size: 100% var(--header-height);
+  background-position: top center;
+  height: var(--header-height);
+  background-image: var(--header-image-url);
+}
+
+.header-image.tall::before {
+  background-size: 100% var(--header-height-tall);
+  height: var(--header-height-tall);
 }
 
 .header-title {
@@ -82,7 +110,7 @@
   text-align: center;
 }
 
-.tall {
+.verytall {
   height: 200vh;
 }
 

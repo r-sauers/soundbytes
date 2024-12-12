@@ -69,4 +69,8 @@ export default class SoundsController extends Controller {
   getCat = () => {
     return this.cat;
   };
+
+  willDestroy() {
+    this.unsub();
+  }
 }
