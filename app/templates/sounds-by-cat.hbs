@@ -4,15 +4,17 @@
   <h1 class="header-title display-1">{{@model.category}}</h1>
   <h2 class="header-subtitle display-6">Listen and add songs.</h2>
   <div class="header-actions m-2">
-      <button type="button" class="btn btn-primary m-3">Record Sound</button>
+      <button type="button" class="btn btn-primary m-3" onclick="location.href='#record'">Record Sound</button>
   </div>
 </div>
 
-{{#if this.isCreateSoundbyteOpen}}
-  <CreateSoundbyte @cat={{this.getCat}} @close={{this.closeCreateSoundbyte}}/>
-{{else}}
-  <button type="button" {{on "click" this.openCreateSoundbyte}}>Add Soundbyte</button>
-{{/if}}
+<div id='record' style="display: flex; flex-direction: row; justify-content: center;">
+  {{#if this.isCreateSoundbyteOpen}}
+    <CreateSoundbyte @cat={{this.getCat}} @close={{this.closeCreateSoundbyte}}/>
+  {{else}}
+    <button type="button" class="btn btn-primary" style="background-color: purple; margin: 1em;" {{on "click" this.openCreateSoundbyte}}>Add Soundbyte</button>
+  {{/if}}
+</div>
 
 <div class="container">
   {{#each this.soundbytes as |soundbyte|}}
