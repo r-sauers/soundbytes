@@ -16,4 +16,5 @@ Router.map(function () {
     path: '/',
   });
   this.route('sounds_by_cat', { path: '/sounds/:cat' });
+  this.route('category-404');
 });

@@ -1,16 +1,21 @@
 import Route from '@ember/routing/route';
 import { service } from '@ember/service';
-import { doc, query, where, orderBy, setDoc, getDocs, getDoc, collection } from 'firebase/firestore';
-import { tracked } from '@glimmer/tracking';
-
+import {
+  query,
+  where,
+  orderBy,
+  getDocs,
+  collection,
+} from 'firebase/firestore';
 
 export default class SoundsByCatRoute extends Route {
   @service auth;
   @service router;
   @service firebase;
+  @service category;
 
-    @tracked soundbytes = [];
-  @tracked cat;
+  soundbytes = [];
+  catData = null;
 
   async beforeModel(params) {
     try {
@@ -20,12 +25,23 @@ export default class SoundsByCatRoute extends Route {
       console.log(error);
       this.router.transitionTo('splash');
     }
-    this.cat = params.cat;
   }
 
   async model(params) {
     this.soundbytes = [];
-    this.cat = params.cat;
+    this.catName = params.cat;
+
+    try {
+      this.catData = await this.category.getCategory(this.catName);
+    } catch (err) {
+      console.error(err);
+      this.router.transitionTo('category-404', {
+        queryParams: {
+          name: this.catName,
+        },
+      });
+    }
+
     const ref = collection(
       this.firebase.db,
       'users',
@@ -46,14 +62,7 @@ export default class SoundsByCatRoute extends Route {
 
     return {
       soundbytes: this.soundbytes,
-      category: this.cat,
+      category: this.catData,
     };
   }
-
-  setupController(controller, model){
-    console.log("controller reset");
-    super.setupController(controller, model);
-    controller.set('cat', this.cat);
-  }
 }
-

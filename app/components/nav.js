@@ -2,12 +2,13 @@ import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { service } from '@ember/service';
-import { doc, updateDoc, getDoc, collection, getDocs} from 'firebase/firestore';
 
 export default class Nav extends Component {
   @service router;
   @service auth;
   @service firebase;
+  @service category;
+  catUnsub = null;
 
   @tracked projects = [];
 
@@ -15,21 +16,29 @@ export default class Nav extends Component {
     super(...arguments);
 
     this.projects = [];
+    const THIS = this;
+    this.category.ensureInit().then(async () => {
+      THIS.projects = await THIS.category.getCategories();
 
-    const ref = doc(
-      this.firebase.db,
-      'users',
-      this.auth.user.email,
-      'userData',
-      'soundbyteMetaData',
-    );
+      THIS.router.on('routeWillChange', () => {
+        document.body.style.overflowY = 'scroll';
+      });
 
-    getDoc(ref).then((docSnap) => {
-      this.projects = docSnap.data().categories || [];
-    });
-
-    this.router.on('routeWillChange', (transition) => {
-      document.body.style.overflowY = 'scroll';
+      THIS.catUnsub = THIS.category.addListener(
+        THIS.category.EVENT.ALL,
+        (event, data) => {
+          switch (event) {
+            case THIS.category.EVENT.ARCHIVE:
+            case THIS.category.EVENT.UNARCHIVE:
+              THIS.projects = data;
+              break;
+            case THIS.category.EVENT.ADD:
+              THIS.projects = [...THIS.projects, data];
+              break;
+          }
+        },
+        THIS.category.GET_OPTION.UNARCHIVED,
+      );
     });
   }
 
@@ -44,41 +53,18 @@ export default class Nav extends Component {
     evt.preventDefault();
 
     let projectName = evt.target.project_name.value;
-    let project = {
-      name: projectName,
-      archived: false,
-      date_archived: null
-    };
-    this.projects = [...this.projects, project];
-    const ref = doc(
-      this.firebase.db,
-      'users',
-      this.auth.user.email,
-      'userData',
-      'soundbyteMetaData',
-    );
-
-    updateDoc(ref, { categories: this.projects });
+    this.category.addCategory(projectName);
   }
 
   @action
-  async archiveProject(name) {
-    this.projects.forEach(cat => {
-      //console.log(cat);
-      if (cat.name == name) {
-        cat.archived = true;
-        cat.date_archived = Date.now();
-      }
-    });
-    console.log(this.projects);
-    const ref = doc(
-      this.firebase.db,
-      'users',
-      this.auth.user.email,
-      'userData',
-      'soundbyteMetaData',
-    );
+  archiveProject(name) {
+    this.category.archiveCategory(name);
+  }
 
-    await updateDoc(ref, {categories: this.projects});
+  willDestroy() {
+    super.willDestroy();
+    if (this.catUnsub) {
+      this.catUnsub();
+    }
   }
 }

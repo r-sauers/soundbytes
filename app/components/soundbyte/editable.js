@@ -22,6 +22,7 @@ export default class ToDoEditable extends Component {
   @service auth;
   @service router;
   @service textToSpeech;
+  @service category;
 
   @tracked archived = undefined;
   @tracked volume = 0.5; //I think we could have a service to increase/decrease volume and play/pause, so we could save volume across sounds?
@@ -373,17 +374,10 @@ export default class ToDoEditable extends Component {
   @action
   async move() {
     this.showMoreActions = false;
-    const ref = doc(
-      this.firebase.db,
-      'users',
-      this.auth.user.email,
-      'userData',
-      'soundbyteMetaData',
-    );
 
-    const docSnap = await getDoc(ref);
-    const projectsInc = docSnap.data();
-    const categories = projectsInc.categories || [];
+    const categories = await this.category.getCategories(
+      this.category.GET_OPTION.UNARCHIVED,
+    );
 
     var projects2 = { temp: 'No Category' };
     for (var i = 0; i < categories.length; i++) {
@@ -404,7 +398,7 @@ export default class ToDoEditable extends Component {
       preConfirm: async (project) => {
         // Swal.showValidationMessage('Not Implemented!');
         // return false;
-        if(project == 'temp'){
+        if (project == 'temp') {
           project = null;
         }
         Swal.resetValidationMessage();
@@ -417,7 +411,7 @@ export default class ToDoEditable extends Component {
             'soundbytes',
             this.id,
           );
-          await updateDoc(sbRef, {category : project});
+          await updateDoc(sbRef, { category: project });
         } catch (err) {
           Swal.showValidationMessage('Something went wrong!');
           return false;
