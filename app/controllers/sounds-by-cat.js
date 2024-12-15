@@ -72,6 +72,12 @@ export default class SoundsController extends Controller {
     this.category.unarchiveCategory(this.catName);
   }
 
+  @action
+  delete() {
+    this.category.removeCategory(this.catName);
+    this.router.transitionTo('archived');
+  }
+
   // Using arrow function automatically bind 'this' to the correct context, which is the controller in this case.
   //It is necessary because we pass closeCreateSoundbyte to the component, which needs the controller context
   openCreateSoundbyte = () => {

@@ -30,16 +30,21 @@ export default class Nav extends Component {
           switch (event) {
             case THIS.category.EVENT.ARCHIVE:
             case THIS.category.EVENT.UNARCHIVE:
-              THIS.projects = data;
+            case THIS.category.EVENT.REMOVE:
+              THIS.setProjects(data);
               break;
             case THIS.category.EVENT.ADD:
-              THIS.projects = [...THIS.projects, data];
+              THIS.setProjects([...THIS.projects, data]);
               break;
           }
         },
         THIS.category.GET_OPTION.UNARCHIVED,
       );
     });
+  }
+
+  setProjects(projects) {
+    this.projects = JSON.parse(JSON.stringify(projects));
   }
 
   @action

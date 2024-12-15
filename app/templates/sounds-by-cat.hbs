@@ -9,10 +9,11 @@
   </h1>
   <h2 class="header-subtitle display-6">Listen and add songs.</h2>
   <div class="header-actions m-2">
-      <button type="button" class="btn btn-primary m-3" onclick="location.href='#record'">Record Sound</button>
       {{#if this.catArchived}}
+        <button type="button" class="btn btn-danger m-0" {{on 'click' this.delete}}>Delete Project</button>
         <button type="button" class="btn btn-primary m-3" {{on 'click' this.unarchive}}>Unarchive</button>
       {{else}}
+        <button type="button" class="btn btn-primary m-3" onclick="location.href='#record'">Record Sound</button>
         <button type="button" class="btn btn-primary m-3" {{on 'click' this.archive}}>Archive</button>
       {{/if}}
   </div>
