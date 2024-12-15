@@ -39,8 +39,8 @@ export default class ArchivedRoute extends Route {
     var archived_projects = [];
 
     var docSnap = await getDoc(ref);
-    console.log(docSnap.data().categories);
-    docSnap.data().categories.forEach(cat => {
+    const categories = docSnap.data().categories || [];
+    categories.forEach(cat => {
       if (cat.archived) {
         var date = new Date(cat.date_archived);
         var display_date = "";

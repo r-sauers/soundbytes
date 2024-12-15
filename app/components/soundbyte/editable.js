@@ -372,7 +372,6 @@ export default class ToDoEditable extends Component {
 
   @action
   async move() {
-    var projectsInc;
     this.showMoreActions = false;
     const ref = doc(
       this.firebase.db,
@@ -382,14 +381,14 @@ export default class ToDoEditable extends Component {
       'soundbyteMetaData',
     );
 
-    await getDoc(ref).then((docSnap) => {
-      console.log(docSnap);
-      projectsInc = docSnap.data();//.categories;
-    })
+    const docSnap = await getDoc(ref);
+    const projectsInc = docSnap.data();
+    const categories = projectsInc.categories || [];
 
-    var projects2 = {temp: 'No Category'};
-    for(var i = 0; i < projectsInc.categories.length; i++){
-      projects2[projectsInc.categories[i].name] = projectsInc.categories[i].name;
+    var projects2 = { temp: 'No Category' };
+    for (var i = 0; i < categories.length; i++) {
+      const name = categories[i].name;
+      projects2[name] = name;
     }
 
     // const currentProject = `No Project`;

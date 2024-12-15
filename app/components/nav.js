@@ -25,7 +25,6 @@ export default class Nav extends Component {
     );
 
     getDoc(ref).then((docSnap) => {
-      console.log(docSnap.data());
       this.projects = docSnap.data().categories || [];
     });
 
@@ -59,11 +58,10 @@ export default class Nav extends Component {
       'soundbyteMetaData',
     );
 
-    updateDoc(ref, {categories: this.projects});
-
+    updateDoc(ref, { categories: this.projects });
   }
 
-  @action 
+  @action
   async archiveProject(name) {
     this.projects.forEach(cat => {
       //console.log(cat);

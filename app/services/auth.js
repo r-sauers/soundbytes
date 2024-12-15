@@ -1,6 +1,7 @@
 import Service from '@ember/service';
 import { service } from '@ember/service';
 import { action } from '@ember/object';
+import { doc, setDoc } from 'firebase/firestore';
 
 import {
   signInWithPopup,
@@ -53,12 +54,27 @@ export default class AuthService extends Service {
     });
   }
 
+  async handleNewSignIn() {
+    let docRef = doc(
+      this.firebase.db,
+      'users',
+      this.auth.user.email,
+      'userData',
+      'soundbyteMetaData',
+    );
+    await setDoc(docRef, {
+      nextID: 0,
+      categories: [],
+    });
+  }
+
   @action
   async sign_in_with_popup() {
     const provider = new GoogleAuthProvider();
     provider.addScope('profile');
     provider.addScope('email');
     const result = await signInWithPopup(this.auth, provider);
+    this.handleNewSignIn();
     return result;
   }
 
