@@ -8,10 +8,7 @@
   {{#each @model as |archived|}}
     <ul>
       <li class="fs-3">
-        <LinkTo
-          @route="sounds"
-          aria-current="page"
-        >{{archived.name}}</LinkTo>
+       <LinkTo @route="sounds_by_cat" @model={{archived.name}}>{{archived.name}}</LinkTo>
         <span class="fs-4 ms-2 text-secondary">(Archived:
         {{archived.date_archived}})</span>
       </li>

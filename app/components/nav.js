@@ -2,7 +2,7 @@ import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { service } from '@ember/service';
-import { doc, updateDoc, getDoc} from 'firebase/firestore';
+import { doc, updateDoc, getDoc, collection, getDocs} from 'firebase/firestore';
 
 export default class Nav extends Component {
   @service router;
@@ -47,6 +47,8 @@ export default class Nav extends Component {
     let projectName = evt.target.project_name.value;
     let project = {
       name: projectName,
+      archived: false,
+      date_archived: null
     };
     this.projects = [...this.projects, project];
     const ref = doc(
@@ -59,5 +61,26 @@ export default class Nav extends Component {
 
     updateDoc(ref, {categories: this.projects});
 
+  }
+
+  @action 
+  async archiveProject(name) {
+    this.projects.forEach(cat => {
+      //console.log(cat);
+      if (cat.name == name) {
+        cat.archived = true;
+        cat.date_archived = Date.now();
+      }
+    });
+    console.log(this.projects);
+    const ref = doc(
+      this.firebase.db,
+      'users',
+      this.auth.user.email,
+      'userData',
+      'soundbyteMetaData',
+    );
+
+    await updateDoc(ref, {categories: this.projects});
   }
 }
