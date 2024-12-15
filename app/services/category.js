@@ -55,7 +55,6 @@ export default class CategoryService extends Service {
       })
       .then(async (docSnap) => {
         THIS.categories = docSnap.data().categories || [];
-        console.log(THIS.categories);
         THIS._cat_dup = THIS._deepCopy(THIS.categories);
         THIS.constructed = true;
       });
