@@ -84,6 +84,7 @@ export default class CategoryService extends Service {
       throw 'Categories not loaded!';
     }
 
+    console.log(this.categories);
     const filtered = this._filterOption(this.categories, options);
     return filtered;
   }
@@ -186,7 +187,7 @@ export default class CategoryService extends Service {
       return;
     }
 
-    category.archived_date = archive_status
+    category.date_archived = archive_status
       ? Timestamp.fromDate(new Date())
       : null;
     category.archived = archive_status;
@@ -196,7 +197,7 @@ export default class CategoryService extends Service {
         categories: this.categories,
       });
       this._cat_dup[i].archived = archive_status;
-      this._cat_dup[i].archived_date = category.archived_date;
+      this._cat_dup[i].date_archived = category.date_archived;
       for (const id in this.listeners) {
         const listener = this.listeners[id];
         const categories = this._filterOption(
