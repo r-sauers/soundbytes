@@ -94,9 +94,9 @@ export default class CreateSoundbyte extends Component {
 
   @action
   async commitSoundbyte() {
-    if (!this.recorder || this.recordedChunks.length < 1) {
+    if (this.recordedChunks.length < 1) {
       this.popup('Upload a sound before you commit');
-    } else if (this.recorder.state !== 'inactive') {
+    } else if (this.recorder && this.recorder.state !== 'inactive') {
         this.recorder.pause();
         this.isRecoring = false;
     } else {
