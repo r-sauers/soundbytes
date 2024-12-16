@@ -18,6 +18,7 @@ export default class CreateSoundbyte extends Component {
 
   //array to store audio blob chunks. Blobs are immutable, otherwise would append them.
   recordedChunks = [];
+  recordedLabels = [];
   //recorder object that must be recreated with every recording
   recorder = null;
   //audio url for the user to play back recorded audio
@@ -35,7 +36,6 @@ export default class CreateSoundbyte extends Component {
   updateIndicator() {
     const indicator = document.getElementById('sound-indicator');
     indicator.innerHTML = '';
-    const width = indicator.clientWidth;
     let totalBlobSize = 0;
     for (const blob of this.recordedChunks) {
       totalBlobSize += blob.size;
@@ -44,11 +44,12 @@ export default class CreateSoundbyte extends Component {
     for (const blob of this.recordedChunks) {
       console.log(blob);
       const div = document.createElement('div');
-      div.className = 'd-inline-block';
+      div.className = 'd-inline-block m-0 fs-6 text-center align-middle text-light overflow-hidden';
       const hue = i * 40;
       div.style.backgroundColor = `hsl(${hue}deg,50%,50%)`;
-      div.style.width = `${Math.round((blob.size / totalBlobSize) * width)}px`;
-      div.style.height = `10px`;
+      div.innerText = this.recordedLabels[i];
+      div.style.width = `${(blob.size / totalBlobSize) * 100}%`;
+      div.style.height = `40px`;
       indicator.appendChild(div);
       i++;
     }
@@ -105,6 +106,7 @@ export default class CreateSoundbyte extends Component {
       // const audioBlob = new Blob(this.recordedChunks, { type: 'audio/webm' });
       const audioBlob = await this.concatBlobs(this.recordedChunks);
       this.recordedChunks = [];
+      this.recordedLabels = [];
       //update the storage, which makes our audio accessible by url
       const nextID = await this.getNextSoundbyteID(); //these can probably be implemented by a service since it will be a common function
       await this.updateNextSoundbyteID();
@@ -175,13 +177,7 @@ export default class CreateSoundbyte extends Component {
   //this can be called even if a recording is in process
   @action
   resetRecorder() {
-    if (this.recorder && this.recorder.state == 'recording') {
-      this.recorder.pause();
-      this.isRecoring = false;
-    }
-    this.destroyAudioURL();
-    this.recordedChunks = [];
-    this.updateIndicator();
+    this.close();
   }
 
     //audio files are treated as just another recording. They can be used
@@ -193,6 +189,7 @@ export default class CreateSoundbyte extends Component {
             //convert the file into a blob, then push the blob
             const audioBlob = new Blob([file], { type: 'audio/webm' });
             this.recordedChunks.push(audioBlob);
+            this.recordedLabels.push(file.name);
             this.updateIndicator();
         } else {
             this.popup("Unsupported file type");
@@ -240,6 +237,7 @@ export default class CreateSoundbyte extends Component {
         this.recorder.ondataavailable = (event) => {
             if (event.data.size > 0) {
                 this.recordedChunks.push(event.data);
+                this.recordedLabels.push('recording');
                 this.updateIndicator();
             }
         }
