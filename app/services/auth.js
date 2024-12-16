@@ -25,10 +25,18 @@ export default class AuthService extends Service {
 
   // await the result of this function to wait for the user data to be loaded.
   // Otherwise you can run into issues accessing the data before it's loaded
+
   async ensureInitialized() {
     await this.auth.authStateReady();
+    this.user = this.auth.currentUser;
   }
 
+  async requireLogout() {
+    await this.ensureInitialized();
+    if (this.user) {
+      this.router.transitionTo('sounds');
+    }
+  }
   async requireLogin() {
     await this.ensureInitialized();
     if (!this.user) {
@@ -79,5 +87,6 @@ export default class AuthService extends Service {
   @action
   async sign_out() {
     signOut(this.auth);
+    this.router.transitionTo('splash');
   }
 }
