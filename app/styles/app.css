@@ -30,6 +30,12 @@
   */
 }
 
+* > .navbar-nav {
+  --bs-nav-link-color: #000000;
+  --bs-nav-link-hover-color: var(--bs-primary-active);
+  --bs-navbar-active-color: var(--bs-primary)
+}
+
 .fs-1-4 {
   font-size: 1.4rem !important;
 }
@@ -226,3 +232,4 @@
   flex-direction: row;
   align-items: center;
 }
+

@@ -11,15 +11,19 @@
       <div class="offcanvas-body">
         <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
           <li class="nav-item">
-            <LinkTo @route="sounds" class="nav-link {{if (eq this.router.currentRouteName 'sounds') 'active'}}" aria-current="page">My Soundbytes</LinkTo>
+            <LinkTo @route="sounds" class="nav-link fw-medium {{if (eq this.router.currentRouteName 'sounds') 'active'}}" aria-current="page">My Soundbytes</LinkTo>
           </li>
           {{#each this.projects as |project|}}
             {{#unless project.archived}}
             <li class="nav-item">
-              <LinkTo @route="sounds_by_cat" @model={{project.name}} class="nav-link d-inline-block {{if (eq this.router.currentRouteName 'sounds') 'active'}}" aria-current="page">{{project.name}}
-              </LinkTo>
+              <LinkTo
+                  @route="sounds_by_cat"
+                  @model={{project.name}}
+                  class="nav-link d-inline-block {{if (eq this.router.currentRouteName project.name) 'active'}}"
+                  aria-current="page"
+              >{{project.name}}</LinkTo>
               <Tooltip
-                class="nav-link d-inline-block ms-5"
+                class="btn-icon subtle d-inline-block ms-5"
                 @type="button"
                 @placement="right"
                 @title="archive"
@@ -31,7 +35,16 @@
             {{/unless}}
           {{/each}}
           <form class="d-flex mt-3" {{on 'submit' this.createProject}}>
-            <input type="text" class="form-control me-2" aria-label="Add new project" placeholder="New Project" name="project_name"/>
+            <input
+              type="text"
+              class="form-control me-2"
+              aria-label="Add new project"
+              placeholder="New Project"
+              name="project_name"
+              minlength="2"
+              maxlength="30"
+              required
+            />
             <button class="btn btn-outline-success" type="submit">Add</button>
           </form>
         </ul>
