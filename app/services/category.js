@@ -95,6 +95,7 @@ export default class CategoryService extends Service {
         return category;
       }
     }
+    throw 'category not found!';
   }
 
   _filterOption(categories, options) {
