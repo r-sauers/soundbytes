@@ -30,6 +30,10 @@
   */
 }
 
+.fs-1-4 {
+  font-size: 1.4rem !important;
+}
+
 .btn-icon {
   background: none;
   color: var(--bs-primary);
@@ -121,34 +125,6 @@
 .bg-img-1 {
   --header-image-url: url("/soundwave.jpg");
 }
-
-/*
-@media (aspect-ratio >= 8/5) {
-  .header-image-tall {
-
-  }
-  .header-image::before {
-    background-size: 100% 90vh;
-    background-position: top center;
-    height: 90vh;
-  }
-
-  .header-container {
-    height: 90vh;
-  }
-}
-
-@media (aspect-ratio <= 8/5) {
-  .header-image::before {
-    background-size: 130% 40vh;
-    background-position: top center;
-    height: 40vh;
-  }
-
-  .header-container {
-    height: 40vh;
-  }
-}*/
 
 .header-image::before {
   content: "";

@@ -58,6 +58,9 @@
             <button type="button" class="btn btn-lg btn-icon subtle" {{on 'click' this.share}}><i class="bi bi-share-fill"></i></button>
           </div>
           <div class="d-flex justify-content-center align-items-center">
+            <button type="button" class="btn {{if this.repeating 'fs-1-4'}} btn-icon {{unless this.repeating 'subtle btn-lg'}} me-4" {{on 'click' this.toggleRepeat}}>
+              <i class="bi bi-repeat"></i>
+            </button>
             <button type="button" class="btn btn-lg btn-icon" {{on 'click' this.skipBackward}}>
               <i class="bi bi-rewind-circle-fill"></i>
             </button>

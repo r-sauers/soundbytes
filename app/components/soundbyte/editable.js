@@ -27,6 +27,7 @@ export default class ToDoEditable extends Component {
   @tracked archived = undefined;
   @tracked volume = 0.5; //I think we could have a service to increase/decrease volume and play/pause, so we could save volume across sounds?
   @tracked status = 'paused';
+  @tracked repeating = false;
   @tracked offset = 0; //this might not be needed, need to look int wave api
   @tracked showMoreActions = false;
 
@@ -234,7 +235,11 @@ export default class ToDoEditable extends Component {
           }
         });
         this.wavesurfer.on('finish', () => {
-          this.status = 'finished';
+          if (this.repeating) {
+            this.wavesurfer.play();
+          } else {
+            this.status = 'finished';
+          }
         });
       }
     });
@@ -245,6 +250,11 @@ export default class ToDoEditable extends Component {
     this.wavesurfer.loadBlob(this.audioBlob); //needed bc wavesurfer seekTo(0) isn't working
     this.wafesurfer.play();
     this.status = 'playing';
+  }
+
+  @action
+  toggleRepeat() {
+    this.repeating = !this.repeating;
   }
 
   @action
