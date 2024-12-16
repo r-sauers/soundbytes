@@ -35,6 +35,10 @@ export default class CreateSoundbyte extends Component {
 
   updateIndicator() {
     const indicator = document.getElementById('sound-indicator');
+    if (this.recordedChunks.length === 0) {
+      indicator.innerHTML = 'Record or upload a file!';
+      return;
+    }
     indicator.innerHTML = '';
     let totalBlobSize = 0;
     for (const blob of this.recordedChunks) {
@@ -42,7 +46,6 @@ export default class CreateSoundbyte extends Component {
     }
     let i = 0;
     for (const blob of this.recordedChunks) {
-      console.log(blob);
       const div = document.createElement('div');
       div.className = 'd-inline-block m-0 fs-6 text-center align-middle text-light overflow-hidden';
       const hue = i * 40;
@@ -237,7 +240,7 @@ export default class CreateSoundbyte extends Component {
         this.recorder.ondataavailable = (event) => {
             if (event.data.size > 0) {
                 this.recordedChunks.push(event.data);
-                this.recordedLabels.push('recording');
+                this.recordedLabels.push('sound');
                 this.updateIndicator();
             }
         }
