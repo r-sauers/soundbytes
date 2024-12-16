@@ -4,7 +4,6 @@ import { service } from '@ember/service';
 export default class ArchivedRoute extends Route {
   @service router;
   @service auth;
-  @service firebase;
   @service category;
 
   async model() {
@@ -12,12 +11,12 @@ export default class ArchivedRoute extends Route {
     try {
       await this.auth.ensureInitialized();
       await this.auth.ensureLoggedIn();
-      await this.category.ensureInit();
     } catch (error) {
       console.log(error);
       this.router.transitionTo('splash');
+      return;
     }
 
-    return this.category.getCategories(this.category.GET_OPTION.ARCHIVED);
+    await this.category.ensureInit();
   }
 }

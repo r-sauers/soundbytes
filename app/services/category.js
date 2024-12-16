@@ -43,6 +43,9 @@ export default class CategoryService extends Service {
     this.auth
       .ensureInitialized()
       .then(() => {
+        return this.auth.ensureLoggedIn;
+      })
+      .then(() => {
         this.docRef = doc(
           this.firebase.db,
           'users',
@@ -245,7 +248,7 @@ export default class CategoryService extends Service {
       throw 'Category not found!';
     }
 
-    this.categories.pop(i);
+    this.categories.splice(i, 1);
     try {
       await updateDoc(this.docRef, {
         categories: this.categories,
