@@ -16,11 +16,17 @@
           {{#each this.projects as |project|}}
             {{#unless project.archived}}
             <li class="nav-item">
-              <LinkTo @route="sounds_by_cat" @model={{project.name}} class="nav-link {{if (eq this.router.currentRouteName 'sounds') 'active'}}" aria-current="page">{{project.name}}
-                <button type="button" {{on 'click' (fn this.archiveProject project.name)}}>
-                  <i style="float: right;" class="bi bi-archive"></i>
-                </button>
+              <LinkTo @route="sounds_by_cat" @model={{project.name}} class="nav-link d-inline-block {{if (eq this.router.currentRouteName 'sounds') 'active'}}" aria-current="page">{{project.name}}
               </LinkTo>
+              <Tooltip
+                class="nav-link d-inline-block ms-5"
+                @type="button"
+                @placement="right"
+                @title="archive"
+                {{on 'click' (fn this.archiveProject project.name)}}
+              >
+                <i class="bi bi-archive"></i>
+              </Tooltip>
             </li>
             {{/unless}}
           {{/each}}
