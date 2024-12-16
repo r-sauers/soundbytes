@@ -5,8 +5,8 @@ CSCI 5117, Fall 2024, [assignment description](https://canvas.umn.edu/courses/46
 ## App Info:
 
 * Team Name: 404 Not Found
-* App Name: SoundBites
-* App Link: <https://TODO.com/>
+* App Name: SoundBytes
+* App Link: https://csci-5117-project-2.web.app/
 
 ### Students
 
@@ -57,7 +57,7 @@ Which (if any) progressive web app feature(s) does your app support?
 Home page with a few example soundbytes
 
 ![](https://github.com/csci5117f24/project-2-404-not-found/blob/main/mockups/my_soundbytes.png)
-My soundbytes pages where all a users soundbytes will show
+My soundbytes pages where a user can record new soundbytes and see all existing soundbytes
 
 ![](https://media.giphy.com/media/o0vwzuFwCGAFO/giphy.gif)
 
