@@ -1,17 +1,19 @@
+
 <div id="create-soundbyte" class="create-soundbyte-container-container">
-    <button id="close" type="button" class="exit-button" {{on "click" this.close}}>X</button>
+    <button id="close" type="button"  class="exit-button" {{on "click" this.close}}>X</button>
     <div class="create-soundbyte-container">
         <div><b>Create a New Soundbyte</b></div>
         <div class="create-soundbyte-between">
-            <button id="playbackNewAudioBtn" {{on "click" this.playbackAudio}} style="color: purple; background-color: white; border-style: none;" class="bi bi-soundwave"></button>
-            <button id="resetAudioBtn" {{on "click" this.resetRecorder}} style="color: purple; background-color: white; border-style: none;" class="bi bi-trash"></button>
+            <Tooltip id="playbackNewAudioBtn" {{on "click" this.playbackAudio}} class="bi bi-soundwave btn-icon subtle" style="font-size: 1.5em;" @placement="right" @title="playback" @type="button"></Tooltip>
+            <Tooltip id="resetAudioBtn" {{on "click" this.resetRecorder}}  class="bi bi-trash btn-icon subtle" style="font-size: 1.5em;" @placement="left" @title="discard" @type="button"></Tooltip>
         </div>
         <div style="display: flex; justify-content: center;">
-            <button id="recordBtn" type="button"  style="color: purple; background-color: white; border-style: none;" class="{{if this.isRecording 'bi bi-pause-fill' 'bi bi-play-fill'}}" {{on "click" this.toggleRecording}}></button>
+            <button id="recordBtn" class="{{if this.isRecording 'bi bi-pause-fill btn-icon subtle' 'bi bi-mic-fill btn-icon subtle'}}" style="font-size: 1.5em;" {{on "click" this.toggleRecording}}></button>
         </div>
         <div class="create-soundbyte-between">
-            <input type="file" style="font-size: 0.5em;" accept="audio/webm" onchange={{this.handleAudioFile}}/>
-            <button id="commitRecording" {{on "click" this.commitSoundbyte}} style="color: purple; background-color: white; border-style: none;" class="bi bi-cloud-plus"></button>
+            <input type="file" style="font-size: 0.5em; display: none;" id="file-upload" accept="audio/webm" onchange={{this.handleAudioFile}}/>
+            <Tooltip {{on "click" this.triggerFileInput}} class="bi bi-upload btn-icon subtle" style="font-size: 1.5em;" @placement="right" @title="upload file" @type="button"></Tooltip>
+            <Tooltip id="commitRecording" {{on "click" this.commitSoundbyte}} class="bi bi-cloud-upload-fill btn-icon subtle" style="font-size: 1.5em;" @placement="left" @title="save" @type="button"></Tooltip>
         </div>
     </div>
 </div>

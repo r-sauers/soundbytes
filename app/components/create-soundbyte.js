@@ -63,6 +63,12 @@ export default class CreateSoundbyte extends Component {
     return newBlob;
   }
 
+  @action triggerFileInput() {
+    const fileUpload = document.getElementById("file-upload");
+    console.log("hi")
+    fileUpload.click();
+  }
+
   @action
   async commitSoundbyte() {
     if (!this.recorder || this.recordedChunks.length < 1) {
