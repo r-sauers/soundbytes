@@ -11,7 +11,9 @@ CSCI 5117, Fall 2024, [assignment description](https://canvas.umn.edu/courses/46
 ### Students
 
 * Ryan Sauers, sauer319@umn.edu
-* ...
+* Lucas Lund, lund1792@umn.edu
+* Hayden Carlson, carl6656@umn.edu
+* Evan Burkstrand, burks079@umn.edu
 
 
 ## Key Features
@@ -19,15 +21,18 @@ CSCI 5117, Fall 2024, [assignment description](https://canvas.umn.edu/courses/46
 **Describe the most challenging features you implemented
 (one sentence per bullet, maximum 4 bullets):**
 
-* ...
+* Audio recording, uploading, and appending
+* Categorization through projects and archiving projects
+* Real time audio vizulization and dynamic playback
+* 
 
 Which (if any) device integration(s) does your app support?
 
-* ...
+* Microphone integration
 
 Which (if any) progressive web app feature(s) does your app support?
 
-* ...
+* None
 
 
 
@@ -42,14 +47,17 @@ Which (if any) progressive web app feature(s) does your app support?
 
 **Is there anything special we need to know in order to effectively test your app? (optional):**
 
-* ...
+* No
 
 
 
 ## Screenshots of Site (complete)
 
-**[Add a screenshot of each key page](https://stackoverflow.com/questions/10189356/how-to-add-screenshot-to-readmes-in-github-repository)
-along with a very brief caption:**
+![](https://github.com/csci5117f24/project-2-404-not-found/blob/main/mockups/home.png)
+Home page with a few example soundbytes
+
+![](https://github.com/csci5117f24/project-2-404-not-found/blob/main/mockups/my_soundbytes.png)
+My soundbytes pages where all a users soundbytes will show
 
 ![](https://media.giphy.com/media/o0vwzuFwCGAFO/giphy.gif)
 
