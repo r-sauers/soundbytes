@@ -69,7 +69,8 @@ My soundbytes pages where a user can record new soundbytes and see all existing 
 Please do not document required libraries (e.g., React, Azure serverless functions, Azure nosql).**
 
 * Library or service name: description of use
-* ...
+* Wavesurfer.js: Visulization and playback of audio files
+* AssemblyAI API: Transcription of webm audio file to text
 
 **If there's anything else you would like to disclose about how your project
 relied on external code, expertise, or anything else, please disclose that
