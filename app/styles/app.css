@@ -3,6 +3,79 @@
   --header-height: 40vh;
   --header-height-tall: 90vh;
   --header-image-url: url("/soundwave.jpg");
+  --bs-primary: #9201CB;
+  --bs-primary-hover: #7501A2;
+  --bs-primary-active: #57017A;
+  --bs-primary-rgb: 146,1,203;
+}
+
+.btn-primary {
+
+  --bs-btn-bg: var(--bs-primary);
+  --bs-btn-border-color: var(--bs-primary);
+  --bs-btn-hover-bg: var(--bs-primary-hover);
+  --bs-btn-hover-border-color: var(--bs-primary-hover);
+  --bs-btn-active-bg: var(--bs-primary-active);
+  --bs-btn-active-border-color: var(--bs-primary-active);
+
+
+  /*
+  --bs-btn-color: #760450;
+  --bs-btn-bg: #F715AB;
+  --bs-btn-border-color: #F715AB;
+  --bs-btn-hover-bg: #EC09A0;
+  --bs-btn-hover-border-color: #EC09A0;
+  --bs-btn-active-bg: #C50786;
+  --bs-btn-active-border-color: #C50786;
+  */
+}
+
+.btn-icon {
+  background: none;
+  color: var(--bs-primary);
+  text-align: center;
+  border: none;
+  padding: 0px;
+  font-size: 2rem;
+}
+.btn-icon.subtle {
+  color: var(--bs-primary-active);
+  font-size: 1.3rem;
+}
+.btn-icon:hover {
+  color: var(--bs-primary-hover);
+}
+.btn-icon:active {
+  color: var(--bs-primary-active);
+}
+.btn-icon.subtle:hover {
+  color: var(--bs-primary);
+}
+
+.form-range:focus::-webkit-slider-thumb {
+  box-shadow:
+    0 0 0 1px #fff,
+    0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
+}
+.form-range:focus::-moz-range-thumb {
+  box-shadow:
+    0 0 0 1px #fff,
+    0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
+}
+.form-range::-moz-focus-outer {
+  border: 0;
+}
+.form-range::-webkit-slider-thumb {
+  background-color: var(--bs-primary);
+}
+.form-range::-webkit-slider-thumb:active {
+  background-color: var(--bs-primary-hover);
+}
+.form-range::-moz-range-thumb {
+  background-color: var(--bs-primary);
+}
+.form-range::-moz-range-thumb:active {
+  background-color: var(--bs-primary-hover);
 }
 
 @media (aspect-ratio <= 8/5) {

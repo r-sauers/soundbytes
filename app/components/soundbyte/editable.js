@@ -222,8 +222,8 @@ export default class ToDoEditable extends Component {
       if (!this.wavesurfer) {
         this.wavesurfer = WaveSurfer.create({
           container: `#waveform-${this.id}`,
-          waveColor: 'violet',
-          progressColor: 'purple',
+          waveColor: '#B10678',
+          progressColor: '#F715AB',
           height: 100,
           barWidth: 3,
         });
