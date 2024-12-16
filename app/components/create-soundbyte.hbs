@@ -3,6 +3,7 @@
     <button id="close" type="button"  class="exit-button" {{on "click" this.close}}>X</button>
     <div class="create-soundbyte-container">
         <div><b>Create a New Soundbyte</b></div>
+        <div id="sound-indicator" class="w-full"></div>
         <div class="create-soundbyte-between">
             <Tooltip id="playbackNewAudioBtn" {{on "click" this.playbackAudio}} class="bi bi-soundwave btn-icon subtle" style="font-size: 1.5em;" @placement="right" @title="playback" @type="button"></Tooltip>
             <Tooltip id="resetAudioBtn" {{on "click" this.resetRecorder}}  class="bi bi-trash btn-icon subtle" style="font-size: 1.5em;" @placement="left" @title="discard" @type="button"></Tooltip>

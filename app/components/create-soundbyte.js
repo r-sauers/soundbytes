@@ -32,6 +32,28 @@ export default class CreateSoundbyte extends Component {
     this.started = true;
   }
 
+  updateIndicator() {
+    const indicator = document.getElementById('sound-indicator');
+    indicator.innerHTML = '';
+    const width = indicator.clientWidth;
+    let totalBlobSize = 0;
+    for (const blob of this.recordedChunks) {
+      totalBlobSize += blob.size;
+    }
+    let i = 0;
+    for (const blob of this.recordedChunks) {
+      console.log(blob);
+      const div = document.createElement('div');
+      div.className = 'd-inline-block';
+      const hue = i * 40;
+      div.style.backgroundColor = `hsl(${hue}deg,50%,50%)`;
+      div.style.width = `${Math.round((blob.size / totalBlobSize) * width)}px`;
+      div.style.height = `10px`;
+      indicator.appendChild(div);
+      i++;
+    }
+  }
+
   async concatBlobs(blobs) {
     // return new Blob(blobs, { type: 'audio/webm' });
     // Step 1: Extract raw binary data from all blobs
@@ -159,6 +181,7 @@ export default class CreateSoundbyte extends Component {
     }
     this.destroyAudioURL();
     this.recordedChunks = [];
+    this.updateIndicator();
   }
 
     //audio files are treated as just another recording. They can be used
@@ -170,6 +193,7 @@ export default class CreateSoundbyte extends Component {
             //convert the file into a blob, then push the blob
             const audioBlob = new Blob([file], { type: 'audio/webm' });
             this.recordedChunks.push(audioBlob);
+            this.updateIndicator();
         } else {
             this.popup("Unsupported file type");
         }
@@ -216,6 +240,7 @@ export default class CreateSoundbyte extends Component {
         this.recorder.ondataavailable = (event) => {
             if (event.data.size > 0) {
                 this.recordedChunks.push(event.data);
+                this.updateIndicator();
             }
         }
     }
