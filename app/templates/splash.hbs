@@ -14,23 +14,13 @@
   </div>
 </div>
 <div class="container">
-    <p style="margin-top: 3em;">
+    <p style="margin-top: 3em; margin-bottom: 3em;">
       Welcome to SoundBytes! Leave yourself a voice note and organize 
       your soundbytes into project categories. Popular categories are things like
       jokes, melodies, notes, and quotes. SoundBytes also allows audio files to be appended
       at any point in a recording!
     </p>
-    <Soundbyte::NonEditable @soundbyte={{@model.welcome}}></Soundbyte::NonEditable>
-    <p style="margin-top: 3em;">
-      Traditional notes apps don't preserve important
-      features of jokes such as timing, pitch, and cadence. Record a soundbyte to
-      level up your comedy skills!
-
-    </p>
-    <Soundbyte::NonEditable @soundbyte={{@model.joke}}></Soundbyte::NonEditable>
-    <p style="margin-top: 3em;">
-      Have you ever thought of a melody but forgot it before you can record it? SoundBytes is a 
-      portable, simple, and fast way to save on-the-fly muscial ideas!
-    </p>
-    <Soundbyte::NonEditable @soundbyte={{@model.melody}}></Soundbyte::NonEditable>
+    <Soundbyte::NonEditable @soundbyte={{@model.welcome}} class="my-3"></Soundbyte::NonEditable>
+    <Soundbyte::NonEditable @soundbyte={{@model.joke}} class="my-3"></Soundbyte::NonEditable>
+    <Soundbyte::NonEditable @soundbyte={{@model.melody}} class="my-3"></Soundbyte::NonEditable>
 </div>

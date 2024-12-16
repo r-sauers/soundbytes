@@ -3,21 +3,21 @@
     "welcome": {
         "url": "/soundbytes/audio/welcome.webm",
         "name": "welcome",
-        "description": "Welcome to soundbytes!",
+        "description": "Welcome to SoundBytes!",
         "id": 0,
         "category": "public"
     },
     "melody": {
         "url": "/soundbytes/audio/melody.webm",
         "name": "melody",
-        "description": "Record melodies",
+        "description": "Have you ever thought of a melody but forgot it before you can record it? SoundBytes is a portable, simple, and fast way to save on-the-fly muscial ideas!",
         "id": 1,
         "category": "public"
     },
     "joke": {
         "url": "/soundbytes/audio/joke.webm",
         "name": "joke",
-        "description": "Record jokes",
+        "description": "Traditional notes apps don't preserve important features of jokes such as timing, pitch, and cadence. Record a soundbyte to level up your comedy skills!",
         "id": 2,
         "category": "public"
     }
