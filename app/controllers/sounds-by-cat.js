@@ -73,8 +73,24 @@ export default class SoundsController extends Controller {
   }
 
   @action
-  delete() {
-    this.category.removeCategory(this.catName);
+  async delete() {
+    const result = await Swal.fire({
+      title:
+        'Would you like to preserve the soundbytes in this project or delete them too?',
+      icon: 'question',
+      confirmButtonText: `Preserve`,
+      showCancelButton: true,
+      showDenyButton: true,
+      denyButtonText: `Delete!`,
+    });
+
+    if (result.isDismissed) return;
+
+    if (result.isConfirmed) {
+      this.category.removeCategory(this.catName, false);
+    } else if (result.isDenied) {
+      this.category.removeCategory(this.catName, true);
+    }
     this.router.transitionTo('archived');
   }
 

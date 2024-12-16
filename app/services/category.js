@@ -1,6 +1,16 @@
 import Service from '@ember/service';
 import { service } from '@ember/service';
-import { doc, getDoc, updateDoc, Timestamp } from 'firebase/firestore';
+import {
+  doc,
+  collection,
+  getDoc,
+  query,
+  where,
+  getDocs,
+  updateDoc,
+  deleteDoc,
+  Timestamp,
+} from 'firebase/firestore';
 
 export default class CategoryService extends Service {
   @service auth;
@@ -234,7 +244,7 @@ export default class CategoryService extends Service {
     await this._archiveCategory(catName, false);
   }
 
-  async removeCategory(catName) {
+  async removeCategory(catName, removeSoundbytes = false) {
     let category = null;
     let i = 0;
     for (i = 0; i < this.categories.length; i++) {
@@ -254,7 +264,7 @@ export default class CategoryService extends Service {
         categories: this.categories,
       });
 
-      this._cat_dup.pop(i);
+      this._cat_dup.splice(i, 1);
       for (const id in this.listeners) {
         const listener = this.listeners[id];
         const categories = this._filterOption(
@@ -269,10 +279,39 @@ export default class CategoryService extends Service {
           }
         }
       }
+
+      this._removeSoundbytes(category.name, removeSoundbytes);
     } catch (err) {
       console.error(err);
       this.categories = this._deepCopy(this._cat_dup);
     }
+  }
+
+  async _removeSoundbytes(categoryName, removeSoundbytes) {
+    const ref = collection(
+      this.firebase.db,
+      'users',
+      this.auth.user.email,
+      'soundbytes',
+    );
+    const q = query(ref, where('category', '==', categoryName));
+    const docSnap = await getDocs(q);
+    docSnap.docs.forEach((d) => {
+      const ref = doc(
+        this.firebase.db,
+        'users',
+        this.auth.user.email,
+        'soundbytes',
+        d.id,
+      );
+      if (removeSoundbytes) {
+        deleteDoc(ref);
+      } else {
+        updateDoc(ref, {
+          category: null,
+        });
+      }
+    });
   }
 
   addListener(event, callback, options = this.GET_OPTION.ALL) {
