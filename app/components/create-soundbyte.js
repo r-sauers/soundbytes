@@ -99,10 +99,13 @@ export default class CreateSoundbyte extends Component {
   async commitSoundbyte() {
     if (this.recordedChunks.length < 1) {
       this.popup('Upload a sound before you commit');
-    } else if (this.recorder && this.recorder.state !== 'inactive') {
+      return
+    }
+    //pause if we are recording
+    if (this.recorder && this.recorder.state !== 'inactive') {
         this.recorder.pause();
-        this.isRecoring = false;
-    } else {
+        this.isRecording = false;
+    }
       //delete audio URL if present
       this.destroyAudioURL();
       //create a new audio blob from the array of audioblobs
@@ -147,7 +150,6 @@ export default class CreateSoundbyte extends Component {
       //reset the recorder
       this.recorder = null;
       this.close();
-    }
   }
 
   @action

@@ -344,7 +344,7 @@ export default class ToDoEditable extends Component {
       this.category.GET_OPTION.UNARCHIVED,
     );
 
-    var projects2 = { temp: 'No Category' };
+    var projects2 = { temp: 'No Project' };
     for (var i = 0; i < categories.length; i++) {
       const name = categories[i].name;
       projects2[name] = name;
