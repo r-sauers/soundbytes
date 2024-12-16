@@ -67,7 +67,11 @@ export default class CategoryService extends Service {
         return getDoc(this.docRef);
       })
       .then(async (docSnap) => {
-        THIS.categories = docSnap.data().categories || [];
+        if (docSnap.exists()) {
+          THIS.categories = docSnap.data().categories || [];
+        } else {
+          THIS.categories = [];
+        }
         THIS._cat_dup = THIS._deepCopy(THIS.categories);
         THIS.constructed = true;
       });
