@@ -37,7 +37,7 @@ export default class CreateSoundbyte extends Component {
     // Step 1: Extract raw binary data from all blobs
     let totalLength = 0;
     const dataBuffers = [];
-  
+
     // Read each blob as an ArrayBuffer and extract data
     for (let blob of blobs) {
       const arrayBuffer = await new Promise((resolve) => {
@@ -45,11 +45,11 @@ export default class CreateSoundbyte extends Component {
         reader.onloadend = () => resolve(reader.result);
         reader.readAsArrayBuffer(blob);
       });
-  
+
       dataBuffers.push(new Uint8Array(arrayBuffer));  // Store data as Uint8Array for easy concatenation
       totalLength += arrayBuffer.byteLength;
     }
-  
+
     // Step 2: Concatenate all data buffers into one large Uint8Array
     const concatenatedArray = new Uint8Array(totalLength);
     let offset = 0;
@@ -57,7 +57,7 @@ export default class CreateSoundbyte extends Component {
       concatenatedArray.set(buffer, offset);
       offset += buffer.length;
     });
-  
+
     // Step 3: Create the combined Blob (if necessary, create a new header)
     const newBlob = new Blob([concatenatedArray], { type: 'audio/webm' });
     return newBlob;
@@ -100,7 +100,7 @@ export default class CreateSoundbyte extends Component {
       }catch (error){
         cat = null;
       }
-      
+
       await setDoc(d, {
         timestamp: Date.now(),
         url: url,
@@ -160,7 +160,6 @@ export default class CreateSoundbyte extends Component {
     @action
     async handleAudioFile(event) {
         const file = event.target.files[0];
-        console.log(file.type);
         if (file && file.type == "audio/webm" || file.type == 'video/webm') {
             //convert the file into a blob, then push the blob
             const audioBlob = new Blob([file], { type: 'audio/webm' });

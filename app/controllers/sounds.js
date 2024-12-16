@@ -23,7 +23,6 @@ export default class SoundsController extends Controller {
 
   onModelInit() {
     this.soundbytes = this.model;
-    console.log(this.soundbytes);
 
     const ref = collection(
       this.firebase.db,

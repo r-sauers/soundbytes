@@ -84,7 +84,6 @@ export default class CategoryService extends Service {
       throw 'Categories not loaded!';
     }
 
-    console.log(this.categories);
     const filtered = this._filterOption(this.categories, options);
     return filtered;
   }
