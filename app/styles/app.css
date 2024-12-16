@@ -232,4 +232,11 @@
   flex-direction: row;
   align-items: center;
 }
+.empty-feed-msg {
+  border-style: solid;
+  border-radius: 1em;
+  border-color: grey;
+  padding: 2em;
+  display: inline-block;
+}
 

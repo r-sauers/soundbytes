@@ -15,7 +15,17 @@
   {{/if}}
 </div>
 
+{{#if (and (not this.isCreateSoundbyteOpen) (eq this.soundbytes.length 0))}}
+  <div style="display:flex;justify-content:center;">
+    <div class="empty-feed-msg">
+      <h1>No Soundbytes</h1>
+      <p>Feed is empty. Get started by by clicking the button above!</p>
+    </div>
+  </div>
+{{/if}}
+
 <div class="container">
+
   {{#each this.soundbytes as |soundbyte|}}
     <Soundbyte::Editable @soundbyte={{soundbyte}} class="my-3"/>
   {{/each}}

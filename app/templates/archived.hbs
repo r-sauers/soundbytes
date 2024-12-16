@@ -4,6 +4,15 @@
   <h1 class="header-title display-1">Archived Projects</h1>
   <h2 class="header-subtitle display-6">View and open archived proects here!</h2>
 </div>
+{{#if (eq this.categories.length 0)}}
+  <div style="display:flex;justify-content:center;">
+    <div class="empty-feed-msg">
+      <h1>No Projects</h1>
+      <p>Project feed is empty. Get started by creating a project in the sidebar!</p>
+    </div>
+  </div>
+{{/if}}
+
 <div class="container py-5">
   {{#each this.categories as |archived|}}
     <ul>
