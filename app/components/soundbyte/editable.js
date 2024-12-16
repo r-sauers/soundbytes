@@ -240,56 +240,6 @@ export default class ToDoEditable extends Component {
     });
   }
 
-  /*
-  @action
-  async toggleArchived() {
-    d = doc(
-      this.firebase.db,
-      'users',
-      this.auth.user.email,
-      'sound',
-      this.args.id,
-    );
-    await updateDoc(d, {
-      archived: !this.archived,
-    });
-    this.archived = !this.archived;
-  }
-
-  @action
-  raiseVolume() {
-    if (this.volume < 1) {
-      this.volume += 0.05;
-      this.wavesurfer.setVolume(this.volume);
-    }
-  }
-
-  @action
-  async lowerVolume() {
-    if (this.volume >= 0) {
-      this.volume -= 0.05;
-      this.wavesurfer.setVolume(this.volume);
-    }
-  }
-
-  @action
-  async deleteSound() {
-    //delete doc
-    d = doc(
-      this.firebase.db,
-      'users',
-      this.auth.user.email,
-      'sound',
-      this.args.sound.id,
-    );
-    await deleteDoc(d);
-    //delete storage
-    const audio = ref(this.firebase.storage, this.args.audioPath);
-    await deleteObject(audio);
-    //reroute to sounds feed
-    this.router.transitionTo('sounds');
-  }*/
-
   @action
   restartPlayback() {
     this.wavesurfer.loadBlob(this.audioBlob); //needed bc wavesurfer seekTo(0) isn't working
@@ -298,7 +248,7 @@ export default class ToDoEditable extends Component {
   }
 
   @action
-  skipForward() {
+  async skipForward() {
     const seconds = 10;
     this.wavesurfer.skip(seconds);
   }
@@ -306,6 +256,11 @@ export default class ToDoEditable extends Component {
   @action
   skipBackward() {
     const seconds = 10;
+    const time = this.wavesurfer.getCurrentTime();
+    if (time - seconds <= 0) {
+      this.wavesurfer.pause();
+      this.status = 'paused';
+    }
     this.wavesurfer.skip(-seconds);
     if (this.status == 'finished') {
       this.status = 'paused';
