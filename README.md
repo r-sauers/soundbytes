@@ -1,79 +1,37 @@
-# Module 2 Group Assignment
+# SoundBytes
 
-CSCI 5117, Fall 2024, [assignment description](https://canvas.umn.edu/courses/460699/pages/project-2)
+![](https://github.com/csci5117f24/project-2-404-not-found/blob/main/mockups/home.png)
 
-## App Info:
+Sounds are everywhere, they are beautiful, funny and can inspire the deepest emotions within us. Create a personal collection of the sounds around you using Soundbytes! You can record poems, sounds of nature, tunes and jokes, from any device with a simple tap. Each sound can be played back, shared, categorized and transcribed.
 
-* Team Name: 404 Not Found
-* App Name: SoundBytes
-* App Link: https://csci-5117-project-2.web.app/
+## App Link: https://csci-5117-project-2.web.app/
 
-### Students
+## Features
+
+### Build Your Collection of Sounds
+* Crank up the volume!
+* Play on loop!
+* Skip to the best parts!
+* Share with your friends!
+![](https://github.com/csci5117f24/project-2-404-not-found/blob/main/mockups/my_soundbytes_2.png)
+
+### Multi-Part Audio Recording
+![](https://github.com/csci5117f24/project-2-404-not-found/blob/main/mockups/recording.png)
+
+### Project Categorization
+![](https://github.com/csci5117f24/project-2-404-not-found/blob/main/mockups/projects.png)
+
+### Audio Transcribing
+![](https://github.com/csci5117f24/project-2-404-not-found/blob/main/mockups/transcribe.png)
+
+## Tech Stack
+This project uses Bootstrap 5.0, Ember.js, Google Firestore, and Google Auth. It is hosted on Google Firebase.
+
+## Developers
 
 * Ryan Sauers, sauer319@umn.edu
 * Lucas Lund, lund1792@umn.edu
 * Hayden Carlson, carl6656@umn.edu
 * Evan Burkstrand, burks079@umn.edu
 
-
-## Key Features
-
-**Describe the most challenging features you implemented
-(one sentence per bullet, maximum 4 bullets):**
-
-* Audio recording, uploading, and appending
-* Categorization through projects and archiving projects
-* Real time audio vizulization and dynamic playback
-* 
-
-Which (if any) device integration(s) does your app support?
-
-* Microphone integration
-
-Which (if any) progressive web app feature(s) does your app support?
-
-* None
-
-
-
-## Mockup images
-
-![](https://github.com/csci5117f24/project-2-404-not-found/blob/main/mockups/Soundbites_1.png)
-![](https://github.com/csci5117f24/project-2-404-not-found/blob/main/mockups/Soundbites_2.png)
-![](https://github.com/csci5117f24/project-2-404-not-found/blob/main/mockups/Soundbites_3.png)
-
-
-## Testing Notes
-
-**Is there anything special we need to know in order to effectively test your app? (optional):**
-
-* No
-
-
-
-## Screenshots of Site (complete)
-
-![](https://github.com/csci5117f24/project-2-404-not-found/blob/main/mockups/home.png)
-Home page with a few example soundbytes
-
-![](https://github.com/csci5117f24/project-2-404-not-found/blob/main/mockups/my_soundbytes.png)
-My soundbytes pages where a user can record new soundbytes and see all existing soundbytes
-
-![](https://media.giphy.com/media/o0vwzuFwCGAFO/giphy.gif)
-
-
-
-## External Dependencies
-
-**Document integrations with 3rd Party code or services here.
-Please do not document required libraries (e.g., React, Azure serverless functions, Azure nosql).**
-
-* Library or service name: description of use
-* Wavesurfer.js: Visulization and playback of audio files
-* AssemblyAI API: Transcription of webm audio file to text
-
-**If there's anything else you would like to disclose about how your project
-relied on external code, expertise, or anything else, please disclose that
-here:**
-
-...
+CSCI 5117, Fall 2024, [assignment description](https://canvas.umn.edu/courses/460699/pages/project-2)
